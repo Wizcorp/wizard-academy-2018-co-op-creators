@@ -13,7 +13,7 @@ export default class TitleScene extends TimesteppedScene {
 	 * Ran once at initialization.
 	 */
 	create() {
-		const title = this.game.add.text(this.game.width / 2, 200, 'Wizard Academy Space Shooter');
+		const title = this.game.add.text(this.game.width / 2, 200, 'Test Space Shooter');
 		title.anchor.set(0.5, 0.5);
 		title.align = 'center';
 		title.font = 'Arial';
