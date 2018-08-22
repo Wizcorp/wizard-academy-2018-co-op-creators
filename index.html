@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Wizard Academy Space Shooter</title>
+	<style type="text/css">
+		#content {
+			position: relative;
+		}
+
+		canvas {
+			image-rendering: optimizeSpeed;             /* Older versions of FF          */
+			image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+			image-rendering: -webkit-optimize-contrast; /* Safari                        */
+			image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+			image-rendering: pixelated;                 /* Awesome future-browsers       */
+			-ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+		}
+	</style>
+</head>
+
+<body>
+
+	<div id="content"></div>
+
+	<script src="node_modules/phaser-ce/build/custom/pixi.js"></script>
+	<script src="node_modules/phaser-ce/build/custom/p2.js"></script>
+	<script src="node_modules/phaser-ce/build/phaser.min.js"></script>
+
+	<script src="build/game.bundle.js"></script>
+</body>
+</html>

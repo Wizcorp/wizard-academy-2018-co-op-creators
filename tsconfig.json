@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    /* The folders for type definitions */
+    "typeRoots": [
+      "./lib/types",
+      "./node_modules/@types"
+    ],
+    "lib": [
+      "dom",
+      "es5",
+      "es2018"
+    ],
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "allowJs": true
+  },
+  /* Source files. You may put type definitions here but it's not the right place for it */
+  "include": [
+    "src/index.ts"
+  ]
+}
