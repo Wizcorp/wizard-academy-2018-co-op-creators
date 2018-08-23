@@ -1,26 +1,19 @@
 import TimesteppedScene from "./base/TimesteppedScene";
 import { Keyboard, Sprite, TileSprite, Input } from "phaser-ce";
 
-const BASIC_DT = 1.0 / 60.0;
-const MAX_DT = 1.0;
+type Vector2 = { x: number, y: number };
 
-export default class Player extends TimesteppedScene {
-	lastUpdateTime: number = 0;
+export default class player extends TimesteppedScene {
 
-	update(): void {
-		let time = this.game.time.totalElapsedSeconds();
+	ResetVelocityWithinTime(vector: Vector2, speed: number) {
+		if (vector.x > 0) vector.x -= speed;
+		else if (vector.x < 0) vector.x += speed;
+		if (vector.y > 0) vector.y -= speed;
+		else if (vector.y < 0) vector.y += speed;
 
-		if (time - this.lastUpdateTime > MAX_DT) {
-			this.lastUpdateTime = time - BASIC_DT;
-		}
-
-		while (time - this.lastUpdateTime >= BASIC_DT) {
-			this.fixedUpdate(BASIC_DT);
-			this.lastUpdateTime += BASIC_DT;
-		}
-	}
-
-	fixedUpdate(dt: number) {
-		console.log(`Please override fixedUpdate`);
+		if (vector.x > 0 && vector.x < speed) vector.x = 0;
+		else if (vector.x < 0 && vector.x > speed) vector.x = 0;
+		if (vector.y > 0 && vector.y < speed) vector.y = 0;
+		else if (vector.y < 0 && vector.y > speed) vector.y = 0;
 	}
 }
