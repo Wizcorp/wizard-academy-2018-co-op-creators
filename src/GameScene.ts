@@ -1,19 +1,8 @@
 import TimesteppedScene from "./base/TimesteppedScene";
-import { Keyboard, Sprite, TileSprite } from "phaser-ce";
+import { Keyboard, Sprite, TileSprite, Input } from "phaser-ce";
+import player from "./player";
 
 type Vector2 = { x: number, y: number };
-
-function addVectors(a: Vector2, b: Vector2): Vector2 {
-	return { x: a.x + b.x, y: a.y + b.y };
-}
-
-function minusVectors(a: Vector2, b: Vector2): Vector2 {
-	return { x: a.x - b.x, y: a.y - b.y };
-}
-
-function multVector(a: Vector2, s: number): Vector2 {
-	return { x: a.x * s, y: a.y * s };
-}
 
 export default class GameScene extends TimesteppedScene {
 	private player: Phaser.Sprite;
@@ -21,10 +10,17 @@ export default class GameScene extends TimesteppedScene {
 	private bullet: Phaser.Sprite;
 	private background: Phaser.TileSprite;
 
-	public playerVelocity: Vector2; 
+	public input: Input;
+
+	public playerVelocity: Vector2;
+	public useKeyboard: boolean;
+
+	init(options: { useKeyboard: boolean }) {
+		this.useKeyboard = options.useKeyboard;
+	}
 
 	preload() {
-		// load image
+		// Load images
 		this.game.load.image('player', 'assets/wizard2.png');
 		this.game.load.image('bullet', 'assets/bullet.png');
 		this.game.load.image('enemy', 'assets/enemy.png');
@@ -32,8 +28,21 @@ export default class GameScene extends TimesteppedScene {
 	}
 
 	create() {
-		this.game.physics.startSystem(Phaser.Physics.ARCADE); // Add physic system
-		this.background = this.game.add.tileSprite(0,0,960,540,"background"); // Add background
+		// For showing FPS
+		this.time.advancedTiming = true;
+
+		// Create a click listener to request to hide the mouse pointer if clicked
+		if (!this.useKeyboard) {
+			this.game.canvas.addEventListener('mousedown', () => {
+				this.input.mouse.requestPointerLock();
+			});
+		}
+
+		// Set world dimensions
+		this.game.world.setBounds(0, 0, 960, 540);
+
+		// Add background
+		this.background = this.game.add.tileSprite(0, 0, 960, 540, "background");
 
 		// Add player
 		this.player = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'player');
@@ -53,47 +62,76 @@ export default class GameScene extends TimesteppedScene {
 		this.bullet.smoothed = false;
 		this.bullet.anchor.set(0.5, 0.5);
 		this.bullet.scale.set(2, 2);
+
 	}
 
-	// fixedUpdate are not working
+	// fixedUpdate is not working
 	fixedUpdate(dt: number) {
 		console.log("FIXED UPDATE!");
 	}
 
-	update(){
-		this.PlayerMovement();
-		this.BackgroundScrolling(this.background,5);
+	update() {
+		this.game.debug.text(this.time.fps.toString(), 20, 50); // Show FPS on screen
+		this.Player1Movement();
+		this.BackgroundScrolling(this.background, 5);
 	}
 
-	PlayerMovement() {
-		const playerSpeedPerFrame: Vector2 = {x:20,y:20}; //speed of player acceleration
+	Player1Movement() {
+		const playerSpeed: Vector2 = { x: 20, y: 20 }; //speed of player acceleration
 		const maxPlayerSpeed: number = 200;
 		const minPlayerSpeed: number = -200;
 		this.playerVelocity = this.player.body.velocity;
+		
+		this.playerVelocity.x = Phaser.Math.clamp(this.playerVelocity.x, minPlayerSpeed, maxPlayerSpeed);
+		this.playerVelocity.y = Phaser.Math.clamp(this.playerVelocity.y, minPlayerSpeed, maxPlayerSpeed);
 
-		this.DampToZero(this.playerVelocity,10);
-		this.playerVelocity.x = Phaser.Math.clamp(this.playerVelocity.x,minPlayerSpeed,maxPlayerSpeed);
-		this.playerVelocity.y = Phaser.Math.clamp(this.playerVelocity.y,minPlayerSpeed,maxPlayerSpeed);
+		if (this.useKeyboard) {
+			if (this.game.input.keyboard.isDown(Keyboard.RIGHT)) this.playerVelocity.x += playerSpeed.x;
+			if (this.game.input.keyboard.isDown(Keyboard.LEFT)) this.playerVelocity.x -= playerSpeed.x;
+			if (this.game.input.keyboard.isDown(Keyboard.UP)) this.playerVelocity.y -= playerSpeed.y;
+			if (this.game.input.keyboard.isDown(Keyboard.DOWN)) this.playerVelocity.y += playerSpeed.y;
+		} else if (!this.useKeyboard && this.input.mouse.locked) {
+			//this.game.physics.arcade.moveToPointer(this.player, maxPlayerSpeed);
+			let mouseX = this.game.input.mouse.input.activePointer.movementX;
+			let mouseY = this.game.input.mouse.input.activePointer.movementY;
 
-		if(this.game.input.keyboard.isDown(Keyboard.RIGHT))this.playerVelocity.x += playerSpeedPerFrame.x;
-		if(this.game.input.keyboard.isDown(Keyboard.LEFT))this.playerVelocity.x -= playerSpeedPerFrame.x;
-		if(this.game.input.keyboard.isDown(Keyboard.UP))this.playerVelocity.y -= playerSpeedPerFrame.y;
-		if(this.game.input.keyboard.isDown(Keyboard.DOWN))this.playerVelocity.y += playerSpeedPerFrame.y;
+			let mouseDirection: Vector2 = {
+				x: Phaser.Math.clamp(mouseX, -1, 1),
+				y: Phaser.Math.clamp(mouseY, -1, 1)
+			};
 
+			
+			console.log(mouseDirection);
+
+			this.playerVelocity.x += mouseDirection.x * playerSpeed.x;
+			this.playerVelocity.y += mouseDirection.y * playerSpeed.y;
+
+			/**if (Phaser.Rectangle.contains(this.player.body, this.game.input.x, this.game.input.y)) {
+				this.player.body.velocity.setTo(0, 0);
+			}**/
+		}
 		this.player.body.velocity = this.playerVelocity;
 	}
 
-	// make the background scrolling
-	BackgroundScrolling(background: TileSprite,speed: number){
+	AddSpriteObject(sprite: Sprite) {
+
+	}
+
+	// Make the background scrolling
+	BackgroundScrolling(background: TileSprite, speed: number) {
 		background.tilePosition.x -= speed;
 	}
 
-	// make a vector damping to zero
-	DampToZero(Vector: Vector2, dampPerFrame: number){
+	// Make a vector decrease/increase unil zero
+	sResetVelocityWithinTime(vector: Vector2, speed: number) {
+		if (vector.x > 0) vector.x -= speed;
+		else if (vector.x < 0) vector.x += speed;
+		if (vector.y > 0) vector.y -= speed;
+		else if (vector.y < 0) vector.y += speed;
 
-		if(Vector.x > 0)Vector.x -= dampPerFrame;
-		else if (Vector.x < 0)Vector.x += dampPerFrame;
-		if(Vector.y > 0)Vector.y -= dampPerFrame;
-		else if(Vector.y < 0)Vector.y += dampPerFrame;
+		if (vector.x > 0 && vector.x < speed) vector.x = 0;
+		else if (vector.x < 0 && vector.x > speed) vector.x = 0;
+		if (vector.y > 0 && vector.y < speed) vector.y = 0;
+		else if (vector.y < 0 && vector.y > speed) vector.y = 0;
 	}
 }
