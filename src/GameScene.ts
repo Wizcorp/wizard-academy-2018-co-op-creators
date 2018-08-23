@@ -1,6 +1,7 @@
 import TimesteppedScene from "./base/TimesteppedScene";
 import { Keyboard, Sprite, TileSprite, Input } from "phaser-ce";
 import Player from "./object/Player";
+import enemy from "./object/enemy";
 
 type Vector2 = { x: number, y: number };
 
@@ -9,8 +10,8 @@ export default class GameScene extends TimesteppedScene {
 
 	private background: Phaser.TileSprite;
 	private player: Player;
+	private enemy: enemy;
 
-	private enemy: Phaser.Sprite;
 	private bullet: Phaser.Sprite;
 	
 	init(options: { useKeyboard: boolean }) {
@@ -39,11 +40,11 @@ export default class GameScene extends TimesteppedScene {
 		this.player = new Player(this.game,this.useKeyboard);
 		this.player.AddPlayer();
 
+		
+
 		// Add enemy(For temp display)
-		this.enemy = this.game.add.sprite(this.game.width / 1.5, this.game.height / 1.5, 'enemy');
-		this.enemy.smoothed = false;
-		this.enemy.anchor.set(0.5, 0.5);
-		this.enemy.scale.set(2, 2);
+		this.enemy = new enemy();
+		this.enemy.Addenemy();
 
 		// Add bullet(For temp display)
 		this.bullet = this.game.add.sprite(this.game.width / 2.5, this.game.height / 2.5, 'bullet');
