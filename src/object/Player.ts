@@ -108,6 +108,4 @@ export default class Player {
 		this.playerSprite.body.collideWorldBounds = true;
 		this.playerSprite.body.linearDamping = 1;
 	}
-
-
 }
