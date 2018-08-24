@@ -23,7 +23,8 @@ export default class GameScene extends TimesteppedScene {
 		this.game.load.image('player', 'assets/wizard1.png');
 		this.game.load.image('bullet', 'assets/bullet.png');
 		this.game.load.image('enemy', 'assets/enemy.png');
-		this.game.load.image('background', 'assets/background.png');
+		this.game.load.image('background', 'assets/stage1.png');
+		this.game.load.image('object', 'assets/object.png');
 	}
 
 	create() {
@@ -43,7 +44,7 @@ export default class GameScene extends TimesteppedScene {
 		
 
 		// Add enemy(For temp display)
-		this.enemy = new enemy();
+		this.enemy = new enemy(this.game);
 		this.enemy.Addenemy();
 
 		// Add bullet(For temp display)
