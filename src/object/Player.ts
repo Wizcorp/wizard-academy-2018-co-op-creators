@@ -14,9 +14,8 @@ export default class Player {
 	private game: Game;
 
 	// Import game scene data into Player.ts
-	constructor(game: Game,_useKeyboard: boolean) {
+	constructor(game: Game) {
 		this.game = game;
-		this.useKeyboard = _useKeyboard;
 		//this.game.load.image('player', 'assets/wizard1.png');
 		this.vectorMath = new VectorMath();
 
@@ -90,7 +89,7 @@ export default class Player {
 		this.playerSprite.anchor.set(0.5, 0.5);
 		this.playerSprite.scale.set(2, 2);
 		this.game.physics.arcade.enable(this.playerSprite); // enable physic system for player
-		//this.playerSprite.body.collideWorldBounds = true;
-		//this.playerSprite.body.linearDamping = 1;
+		this.playerSprite.body.collideWorldBounds = true;
+		this.playerSprite.body.linearDamping = 1;
 	}
 }

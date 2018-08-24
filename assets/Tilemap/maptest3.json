@@ -58,7 +58,11 @@
         {
          "columns":4,
          "firstgid":1,
+<<<<<<< Updated upstream
          "image":"Tiled-files\/collision.png",
+=======
+         "image":"collision.png",
+>>>>>>> Stashed changes
          "imageheight":32,
          "imagewidth":32,
          "margin":0,
@@ -67,6 +71,22 @@
          "tilecount":16,
          "tileheight":8,
          "tilewidth":8
+<<<<<<< Updated upstream
+=======
+        }, 
+        {
+         "columns":120,
+         "firstgid":17,
+         "image":"stage1.png",
+         "imageheight":540,
+         "imagewidth":960,
+         "margin":0,
+         "name":"stage1",
+         "spacing":0,
+         "tilecount":8040,
+         "tileheight":8,
+         "tilewidth":8
+>>>>>>> Stashed changes
         }],
  "tilewidth":8,
  "type":"map",
