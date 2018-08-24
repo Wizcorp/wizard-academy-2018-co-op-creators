@@ -7,6 +7,7 @@ export default class Player {
 	public playerVelocity: Vector2;
 	public useKeyboard: boolean;
 	public playerSprite: Phaser.Sprite;
+	public lifeSprite: Phaser.Sprite;
 
 	private mouseTemp: Vector2 = {x:0, y:0};
 
@@ -47,6 +48,13 @@ export default class Player {
 		}
 		// Use mouse controll if the mouse point is hidden (NOT FINISHED,still buggy)
 		else if (this.game.input.mouse.locked) {
+			if (this.game.input.keyboard.isDown(Keyboard.SPACEBAR))
+			{
+				var hurtAnim = this.lifeSprite.animations.add('playerlife');
+				this.lifeSprite.animations.play('hurtAnim', 10, false);
+				console.log("hurt");
+			}
+		} else if (this.game.input.mouse.locked) {
 			//this.game.physics.arcade.moveToPointer(this.player, maxPlayerSpeed);
 			let mouse: Vector2 = {
 				x: this.game.input.mouse.input.activePointer.movementX,
@@ -73,7 +81,7 @@ export default class Player {
 			
 			this.mouseTemp = mouse;
 			//
-			console.log(mouseDirection);
+			//console.log(mouseDirection);
 			/**if (Phaser.Rectangle.contains(this.player.body, this.game.input.x, this.game.input.y)) {
 				this.player.body.velocity.setTo(0, 0);
 			}**/
@@ -84,6 +92,14 @@ export default class Player {
 	}
 
 	// Create player sprite and set default scale/position
+	//Add Player Life
+	AddPlayerLife(){
+		this.lifeSprite = this.game.add.sprite(this.game.width / 5 , this.game.height / 9, 'playerlife');
+		this.lifeSprite.smoothed = false;
+		this.lifeSprite.anchor.set(0.5, 0.5);
+		this.lifeSprite.scale.set(2, 2);
+	}
+
 	AddPlayer() {
 		this.playerSprite = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'player');
 		this.playerSprite.smoothed = false;
@@ -93,4 +109,6 @@ export default class Player {
 		//this.playerSprite.body.collideWorldBounds = true;
 		//this.playerSprite.body.linearDamping = 1;
 	}
+
+
 }

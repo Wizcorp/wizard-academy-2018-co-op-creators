@@ -27,7 +27,7 @@ export default class Enemy {
    Addenemy()
    {
     console.log("ENEMY");
-    this.enemySprite = this.game.add.sprite(this.game.width / 2.5, this.game.height / 2, 'enemy');
+    this.enemySprite = this.game.add.sprite(this.game.width / 1.6, this.game.height / 2, 'enemy');
     this.enemySprite.smoothed = false;
     this.enemySprite.anchor.set(0.5, 0.5);
     this.enemySprite.scale.set(2, 2);
