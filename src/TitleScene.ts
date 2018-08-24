@@ -39,6 +39,6 @@ export default class TitleScene extends TimesteppedScene {
 	 * Callback for button.
 	 */
 	OnClick() {
-		this.game.state.start('GameScene',true, false,{useKeyboard: true});
+		this.game.state.start('GameScene',true, false);
 	}
 }
