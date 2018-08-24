@@ -8,7 +8,7 @@ type Vector2 = { x: number, y: number };
 export default class GameScene extends TimesteppedScene {
 	//private background: Phaser.TileSprite;
 	private player: Player;
-	private enermy: Enemy;
+	private enemy: Enemy;
 
 	private background: Phaser.TileSprite;
 	private map: Phaser.Tilemap;
@@ -21,8 +21,8 @@ export default class GameScene extends TimesteppedScene {
 		this.game.load.image('player', 'assets/wizard1.png');
 		this.game.load.image('bullet', 'assets/player/bullet.png');
 		this.game.load.image('enemy', 'assets/enemy.png');
-		this.game.load.image('background', 'assets/background.png');
-		this.game.load.spritesheet('playerlife',"assets/life.png",120,35);
+		this.game.load.image('background', 'assets/stage1.png');
+		this.game.load.spritesheet('playerlife',"assets/player/life.png",120,35);
 		
 		this.game.load.image('background', 'assets/stage1.png');
 		this.game.load.image('collision', 'assets/collision.png');
@@ -52,9 +52,9 @@ export default class GameScene extends TimesteppedScene {
 		this.player.AddPlayer();
 		this.player.AddPlayerLife();
 
-		// Add enermy
-		this.enermy = new Enemy(this.game);
-		this.enermy.Addenemy();
+		// Add enemy
+		this.enemy = new Enemy(this.game);
+		this.enemy.Addenemy();
 
 		// Add bullet(For temp display)
 		this.bullet = this.game.add.sprite(this.game.width / 2.5, this.game.height / 2.5, 'bullet');
@@ -75,10 +75,10 @@ export default class GameScene extends TimesteppedScene {
 
 		if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
 		 {
-			this.game.load.spritesheet('playerlife',"assets/life.png",100,160);
+			this.game.load.spritesheet('playerlife',"assets/player/life.png",100,160);
 		 }else
 		 {
-			this.game.load.spritesheet('playerlife',"assets/life.png",100,160);
+			this.game.load.spritesheet('playerlife',"assets/player/life.png",100,160);
 		 }
 	}
 
