@@ -31,7 +31,7 @@ export default class GameScene extends TimesteppedScene {
 		this.time.advancedTiming = true;
 
 		// Set world dimensions
-		this.game.world.setBounds(0, 0, 960, 540);
+		this.game.world.setBounds(0, 0, 956, 538);
 
 		// Add background
 		this.background = this.game.add.tileSprite(0, 0, 960, 540, "background");
@@ -62,6 +62,7 @@ export default class GameScene extends TimesteppedScene {
 		this.game.debug.text(this.time.fps.toString(), 20, 50); // Show FPS on screen
 		this.player.PlayerMovement();
 		this.BackgroundScrolling(this.background, 5);
+		console.log(this.player.playerSprite.body.velocity);
 	}
 
 	// Make the background scrolling
