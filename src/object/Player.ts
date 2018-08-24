@@ -44,16 +44,16 @@ export default class Player {
 			if (this.game.input.keyboard.isDown(Keyboard.LEFT)) this.playerVelocity.x -= playerSpeed.x;
 			if (this.game.input.keyboard.isDown(Keyboard.UP)) this.playerVelocity.y -= playerSpeed.y;
 			if (this.game.input.keyboard.isDown(Keyboard.DOWN)) this.playerVelocity.y += playerSpeed.y;
+
+				if (this.game.input.keyboard.isDown(Keyboard.SPACEBAR))
+				{
+					var hurtAnim = this.lifeSprite.animations.add('playerlife');
+					this.lifeSprite.animations.play('hurtAnim', 10, false);
+					console.log("hurt");
+				}
 		}
 		// Use mouse controll if the mouse point is hidden (NOT FINISHED,still buggy)
 		else if (this.game.input.mouse.locked) {
-			if (this.game.input.keyboard.isDown(Keyboard.SPACEBAR))
-			{
-				var hurtAnim = this.lifeSprite.animations.add('playerlife');
-				this.lifeSprite.animations.play('hurtAnim', 10, false);
-				console.log("hurt");
-			}
-		} else if (this.game.input.mouse.locked) {
 			//this.game.physics.arcade.moveToPointer(this.player, maxPlayerSpeed);
 			let mouse: Vector2 = {
 				x: this.game.input.mouse.input.activePointer.movementX,
