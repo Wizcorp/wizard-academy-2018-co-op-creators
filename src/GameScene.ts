@@ -29,6 +29,10 @@ export default class GameScene extends TimesteppedScene {
 		// For showing FPS
 		this.time.advancedTiming = true;
 
+		// Add stage
+		this.stageManager = new StageManager(this.game, this.player, 1);
+		this.stageManager.create();
+
 		// Add player
 		this.player = new Player(this.game);
 		this.player.create();
@@ -36,10 +40,6 @@ export default class GameScene extends TimesteppedScene {
 		// Add enermy
 		this.enemy = new Enemy(this.game, this.player);
 		this.enemy.create();
-
-		// Add stage
-		this.stageManager = new StageManager(this.game, this.player, 1);
-		this.stageManager.create();
 	}
 
 	// fixedUpdate is not working
