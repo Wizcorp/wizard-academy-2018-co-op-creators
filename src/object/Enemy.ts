@@ -19,13 +19,12 @@ export default class Enemy {
 
     create() {
         this.CreateDemonGroup();
-        this.AddEnemy("demon");
     }
 
     update(){
 
     }
-
+    
     CreateDemonGroup() {
         this.demonGroup = this.game.add.group();
         this.demonGroup.enableBody = true;
@@ -33,10 +32,27 @@ export default class Enemy {
         this.demonGroup.createMultiple(30, "demon");
         this.demonGroup.setAll("checkWorldBounds", true);
         this.demonGroup.setAll("outOfBoundsKill", true);
-        this.demonGroup.scale.set(2, 2);
+        //this.demonGroup.scale.set(2, 2);
+        this.demonGroup.setAll("scale.x",2);
+        this.demonGroup.setAll("scale.y",2);
+        this.demonGroup.setAll("body.velocity.x",-50);
+
     }
 
-    AddEnemy(enemy: string) {
-        this.enemySprite = this.game.add.sprite(this.game.width / 1.6, this.game.height / 2, enemy);
+    AddEnemy(_enemy: string,_x:number,_y:number) {
+        switch(_enemy){
+            case "demon":
+            this.enemySprite = this.demonGroup.getFirstDead();
+            this.enemySprite.reset(_x,_y);
+            //this.enemySprite.body.velocity.x = -50;
+            //console.log("spawned",_enemy);
+            break;
+
+            case "boss":
+            break;
+
+            default:
+            break;
+        }
     }
 }

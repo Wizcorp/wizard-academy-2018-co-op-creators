@@ -9,11 +9,10 @@ export default class Player {
 	public playerSprite: Phaser.Sprite;
 	public bulletSprite: Phaser.Sprite;
 	public lifeSprite: Phaser.Sprite;
-	private bullet: Phaser.Sprite;
 
 	private mouseTemp: Vector2 = { x: 0, y: 0 };
 	private nextFire: number = 0;
-	private lifeGroup: Phaser.Group;
+	public lifeGroup: Phaser.Group;
 	private bulletGroup: Phaser.Group;
 	private vectorMath: VectorMath;
 	private game: Game;
@@ -22,10 +21,6 @@ export default class Player {
 	constructor(game: Game) {
 		this.game = game;
 		this.vectorMath = new VectorMath();
-		// Create a click listener to request to hide the mouse pointer if clicked
-		this.game.canvas.addEventListener('mousedown', () => {
-			this.game.input.mouse.requestPointerLock();
-		});
 	}
 
 	create() {
@@ -33,6 +28,8 @@ export default class Player {
 		this.LoadPlayerAnim();
 		this.CreatePlayerLife(3);
 		this.CreateBullet();
+		// Create a click listener to request to hide the mouse pointer if clicked
+		this.HideMouse(true);
 	}
 
 	update() {
@@ -42,9 +39,11 @@ export default class Player {
 	}
 
 	LoadPlayerAnim() {
-		this.playerSprite.animations.add("idle", ["player_idle1"], 10, true, false);
-		this.playerSprite.animations.add("attack", ["player_atk1", "player_atk2"], 5, false, false);
-		//this.playerSprite.animations.add("death", ["player_death1"], 5, false, false);
+		let deathFrameName = Phaser.Animation.generateFrameNames("player_death",1,16,"",2);
+
+		this.playerSprite.animations.add("idle", ["player_idle01"], 10, true, false);
+		this.playerSprite.animations.add("attack", ["player_attack01", "player_attack02"], 5, false, false);
+		this.playerSprite.animations.add("death", deathFrameName, 10, false, false);
 	}
 
 	PlayerMovement() {
@@ -128,7 +127,7 @@ export default class Player {
 			this.bulletSprite.reset(this.playerSprite.x + bulletOffset.x,this.playerSprite.y + bulletOffset.y);
 			this.bulletSprite.body.velocity.x = bulletSpeed;
 		}
-		this.playerSprite.animations.currentAnim.onComplete.add( () =>
+		this.playerSprite.animations.getAnimation("attack").onComplete.add( () =>
 		{this.playerSprite.play("idle");},this);
 	}
 
@@ -150,10 +149,10 @@ export default class Player {
 			currentLifeSprite.frameName = "life_empty";
 			this.playerLife--;
 		}else{
-			//this.playerSprite.play("death");
-			this.playerSprite.animations.currentAnim.onComplete.add( () =>
+			this.HideMouse(false);
+			this.playerSprite.play("death");
+			this.playerSprite.animations.getAnimation("death").onComplete.add( () =>
 			{this.game.state.start('GameOverScene',true, false);},this);
-			//this.game.state.start('GameOverScene',true, false);
 		}
 	}
 
@@ -166,5 +165,13 @@ export default class Player {
 		this.playerSprite.body.collideWorldBounds = true;
 		this.playerSprite.body.linearDamping = 1;
 		this.playerSprite.play("idle");
+	}
+
+	HideMouse(isOn: boolean){
+		const onMouseDown = () =>{
+			this.game.input.mouse.requestPointerLock();
+		};
+		if(isOn)this.game.canvas.addEventListener('mousedown', onMouseDown);
+		else if(!isOn)this.game.canvas.removeEventListener("mousedown", onMouseDown);
 	}
 }

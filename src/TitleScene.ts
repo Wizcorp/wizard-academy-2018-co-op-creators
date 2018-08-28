@@ -3,11 +3,14 @@ import { Events } from "phaser-ce";
 
 export default class TitleScene extends TimesteppedScene {
 
+	//private startSprite: Phaser.Sprite;
+
 	/**
 	 * Load sprites and various assets here.
 	 */
 	preload() {
 		this.game.load.image('titleScreen', 'assets/title.png');
+		this.game.load.atlasJSONHash("start", "assets/start.png", "assets/start.json");
 	}
 
 	/**
@@ -15,6 +18,9 @@ export default class TitleScene extends TimesteppedScene {
 	 */
 	create() {
 		const titleScreen = this.game.add.sprite(0,0,'titleScreen');
+		let startSprite = this.game.add.sprite(this.game.width/2.5,this.game.height/1.3,"start");
+		startSprite.animations.add("start",["start1","start2"],2,true,false);
+		startSprite.play("start");
 	}
 
 	/**

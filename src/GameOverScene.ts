@@ -8,8 +8,8 @@ export default class TitleScene extends TimesteppedScene {
 	 * Load sprites and various assets here.
 	 */
 	preload() {
-		this.game.load.spritesheet('retryButton', 'assets/startButton.png', 200, 40);
-		//this.game.load.image('gameOverScreen', 'assets/gameover.png');
+		this.game.load.spritesheet('retryButton', 'assets/restartbutton1.png', 200, 40);
+		this.game.load.image('gameOverScreen', 'assets/gameover.png');
 	}
 
 	/**
@@ -25,6 +25,7 @@ export default class TitleScene extends TimesteppedScene {
 		title.fontSize = 45;
 		title.fill = '#ffffff';
 
+		const gameOverScreen = this.game.add.sprite(0,0,'gameOverScreen');
 		const button = this.game.add.button(this.game.width / 2, 300, 'retryButton', this.OnClick, this, 2, 1, 0);
 		button.anchor.set(0.5, 0.5);
 	}
