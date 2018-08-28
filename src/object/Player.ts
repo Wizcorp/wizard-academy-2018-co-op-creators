@@ -167,24 +167,4 @@ export default class Player {
 		this.playerSprite.body.linearDamping = 1;
 		this.playerSprite.play("idle");
 	}
-
-		//bullet of shot
-		bulletShot()
-		{
-			
-			if (this.game.input.keyboard.isDown(Keyboard.SPACEBAR))
-				{
-					this.SpawnBullet();
-				}
-	
-		}
-
-		SpawnBullet(){
-			this.bullet = this.game.add.sprite(this.game.width / 2.5, this.game.height / 2.5, 'bullet') as Sprite;
-			this.bullet.smoothed = false;
-			this.bullet.anchor.set(0.5, 0.5);
-			this.bullet.scale.set(2, 2);
-			this.bullet.body.velocity =　100;
-			
-		}
 }
