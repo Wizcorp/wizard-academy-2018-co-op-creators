@@ -37,6 +37,7 @@ export default class Player {
 	update() {
 		this.PlayerMovement();
 		this.PlayerAttack();
+		if(this.game.input.keyboard.isDown(Keyboard.Q))this.PlayerHurt();
 	}
 
 	LoadPlayerAnim() {
@@ -151,6 +152,7 @@ export default class Player {
 			//this.playerSprite.play("death");
 			this.playerSprite.animations.currentAnim.onComplete.add( () =>
 			{this.game.state.start('GameOverScene',true, false);},this);
+			//this.game.state.start('GameOverScene',true, false);
 		}
 	}
 
