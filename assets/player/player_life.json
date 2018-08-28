@@ -1,0 +1,28 @@
+{"frames": {
+
+"life_empty":
+{
+	"frame": {"x":1,"y":1,"w":28,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":4,"w":28,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+"life_full":
+{
+	"frame": {"x":31,"y":1,"w":28,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":4,"w":28,"h":28},
+	"sourceSize": {"w":32,"h":32}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "player_life.png",
+	"format": "RGBA8888",
+	"size": {"w":60,"h":30},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:a32a4ac47bcb5b1b62ece67ec838877f:4d4855f6314c8b56e5e2aff839236756:2e52829e0683f293478516d1d78e640c$"
+}
+}
