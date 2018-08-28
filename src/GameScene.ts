@@ -2,29 +2,22 @@ import TimesteppedScene from "./base/TimesteppedScene";
 import { Keyboard, Sprite, TileSprite, Input, Tileset } from "phaser-ce";
 import Player from "./object/Player";
 import Enemy from "./object/enemy";
-
-type Vector2 = { x: number, y: number };
-var speed = 10;
-var x= 0;
-
+import StageManager from "./stage/StageManager";
 
 export default class GameScene extends TimesteppedScene {
 	//private background: Phaser.TileSprite;
 	private player: Player;
 	private enemy: Enemy;
-
-	private background: Phaser.TileSprite;
-	private map: Phaser.Tilemap;
-	private layer: Phaser.TilemapLayer;
+	private stageManager: StageManager;
 
 	preload() {
 		// Load images
-		this.game.load.image('player', 'assets/wizard1.png');
-		var shot = this.game.load.image('bullet', 'assets/player/bullet.png');
-		this.game.load.image('enemy', 'assets/enemy.png');
+		this.game.load.atlasJSONHash("player", "assets/player/player2.png", "assets/player/player2.json");
+		this.game.load.image('bullet', 'assets/player/bullet.png');
+		this.game.load.image('demon', 'assets/enemy/demon.png');
 		this.game.load.image('background', 'assets/stage1.png');
-		this.game.load.spritesheet('playerlife',"assets/player/life.png",120,35);
-		
+		this.game.load.atlasJSONHash("playerLife", "assets/player/player_life.png", "assets/player/player_life.json");
+
 		this.game.load.image('background', 'assets/stage1.png');
 		this.game.load.image('collision', 'assets/collision.png');
 
@@ -36,28 +29,17 @@ export default class GameScene extends TimesteppedScene {
 		// For showing FPS
 		this.time.advancedTiming = true;
 
-		// Set world dimensions
-		this.game.world.setBounds(0, 0, 956, 538);
-
-		// Add tilemap
-		this.map = this.game.add.tilemap("map");
-		this.map.addTilesetImage("collision", "collision");
-		this.layer = this.map.createLayer("Collision");
-		this.layer.resizeWorld();
-
-		// Add background
-		this.background = this.game.add.tileSprite(0, 0, 960, 540, "background");
-
 		// Add player
 		this.player = new Player(this.game);
-		this.player.AddPlayer();
-		this.player.AddPlayerLife();
+		this.player.create();
 
-		// Add enemy
-		this.enemy = new Enemy(this.game);
-		this.enemy.Addenemy();
+		// Add enermy
+		this.enemy = new Enemy(this.game, this.player);
+		this.enemy.create();
 
-		
+		// Add stage
+		this.stageManager = new StageManager(this.game, this.player, 1);
+		this.stageManager.create();
 	}
 
 	// fixedUpdate is not working
@@ -67,12 +49,8 @@ export default class GameScene extends TimesteppedScene {
 
 	update() {
 		this.game.debug.text(this.time.fps.toString(), 20, 50); // Show FPS on screen
-		this.player.PlayerMovement();
-		this.BackgroundScrolling(this.background, 5);
-	}
-
-	// Make the background scrolling
-	BackgroundScrolling(background: TileSprite, speed: number) {
-		background.tilePosition.x -= speed;
+		this.player.update();
+		this.stageManager.update();
+		this.enemy.update();
 	}
 }

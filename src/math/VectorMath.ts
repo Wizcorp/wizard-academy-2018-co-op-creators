@@ -1,6 +1,6 @@
 import TimesteppedScene from "../base/TimesteppedScene";
 
-type Vector2 = { x: number, y: number };
+export type Vector2 = { x: number, y: number };
 
 export default class VectorMath extends TimesteppedScene {
 
