@@ -4,6 +4,9 @@ import Player from "./object/Player";
 import Enemy from "./object/enemy";
 
 type Vector2 = { x: number, y: number };
+var speed = 10;
+var x= 0;
+
 
 export default class GameScene extends TimesteppedScene {
 	//private background: Phaser.TileSprite;
@@ -14,12 +17,10 @@ export default class GameScene extends TimesteppedScene {
 	private map: Phaser.Tilemap;
 	private layer: Phaser.TilemapLayer;
 
-	private bullet: Phaser.Sprite;
-
 	preload() {
 		// Load images
 		this.game.load.image('player', 'assets/wizard1.png');
-		this.game.load.image('bullet', 'assets/player/bullet.png');
+		var shot = this.game.load.image('bullet', 'assets/player/bullet.png');
 		this.game.load.image('enemy', 'assets/enemy.png');
 		this.game.load.image('background', 'assets/stage1.png');
 		this.game.load.spritesheet('playerlife',"assets/player/life.png",120,35);
@@ -56,11 +57,7 @@ export default class GameScene extends TimesteppedScene {
 		this.enemy = new Enemy(this.game);
 		this.enemy.Addenemy();
 
-		// Add bullet(For temp display)
-		this.bullet = this.game.add.sprite(this.game.width / 2.5, this.game.height / 2.5, 'bullet');
-		this.bullet.smoothed = false;
-		this.bullet.anchor.set(0.5, 0.5);
-		this.bullet.scale.set(2, 2);
+		
 	}
 
 	// fixedUpdate is not working
@@ -72,14 +69,6 @@ export default class GameScene extends TimesteppedScene {
 		this.game.debug.text(this.time.fps.toString(), 20, 50); // Show FPS on screen
 		this.player.PlayerMovement();
 		this.BackgroundScrolling(this.background, 5);
-
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
-		 {
-			this.game.load.spritesheet('playerlife',"assets/player/life.png",100,160);
-		 }else
-		 {
-			this.game.load.spritesheet('playerlife',"assets/player/life.png",100,160);
-		 }
 	}
 
 	// Make the background scrolling

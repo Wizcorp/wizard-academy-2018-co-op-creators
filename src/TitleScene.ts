@@ -1,6 +1,5 @@
 import TimesteppedScene from "./base/TimesteppedScene";
 import PhaserTextStyle = Phaser.PhaserTextStyle;
-import { Events } from "phaser-ce";
 
 export default class TitleScene extends TimesteppedScene {
 
@@ -9,7 +8,6 @@ export default class TitleScene extends TimesteppedScene {
 	 */
 	preload() {
 		this.game.load.spritesheet('startButton', 'assets/startButton.png', 200, 40);
-		this.game.load.image('titleScreen', 'assets/title.png');
 	}
 
 	/**
@@ -23,9 +21,8 @@ export default class TitleScene extends TimesteppedScene {
 		title.fontSize = 45;
 		title.fill = '#ffffff';
 
-		const titleScreen = this.game.add.sprite(0,0,'titleScreen');
-		//const useKeyboardButton = this.game.add.button(this.game.width / 2, 300, 'startButton', this.OnClick, this, 2, 1, 0);
-		//useKeyboardButton.anchor.set(0.5, 0.5);
+		const useKeyboardButton = this.game.add.button(this.game.width / 2, 300, 'startButton', this.OnClick, this, 2, 1, 0);
+		useKeyboardButton.anchor.set(0.5, 0.5);
 	}
 
 	/**
@@ -33,9 +30,7 @@ export default class TitleScene extends TimesteppedScene {
 	 */
 	fixedUpdate(dt: number) {
 		// Skip to next scene with space or return
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.ENTER) 
-		|| this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)
-		|| this.game.input.activePointer.isDown) {
+		if (this.game.input.keyboard.isDown(Phaser.Keyboard.ENTER) || this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
 			this.OnClick();
 		}
 }
@@ -44,6 +39,6 @@ export default class TitleScene extends TimesteppedScene {
 	 * Callback for button.
 	 */
 	OnClick() {
-		this.game.state.start('GameScene',true, false);
+		this.game.state.start('GameScene',true, false,{useKeyboard: true});
 	}
 }
