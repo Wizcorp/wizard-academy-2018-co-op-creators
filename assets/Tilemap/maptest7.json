@@ -729,6 +729,30 @@
                  "width":38.6667,
                  "x":8780.66665,
                  "y":237.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":95,
+                 "name":"dragon",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":726.666666666666,
+                 "y":161.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":96,
+                 "name":"ghost",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":973.333333333333,
+                 "y":422.666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -750,7 +774,7 @@
          "y":0
         }],
  "nextlayerid":19,
- "nextobjectid":95,
+ "nextobjectid":97,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"2018.08.06",
