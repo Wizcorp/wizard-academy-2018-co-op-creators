@@ -7,10 +7,10 @@ export default class Enemy {
     private player: Player;
 
     public demonGroup: Phaser.Group;
-    private demonLife: number = 1;
+    public dragonGroup: Phaser.Group;
 
     private enemySprite: Phaser.Sprite;
-
+	private deathAudio: Phaser.Sound;
 
     constructor(game: Game, player: Player) {
         this.game = game;
@@ -18,30 +18,41 @@ export default class Enemy {
     }
 
     create() {
-        this.CreateDemonGroup();
+        this.LoadEnemyAnimNAudio();
+        this.CreateEnemyGroup();
     }
 
     update(){
+    }
 
-	      //this.demon.body.velocity.x = -0.5;
-	      this.demonGroup.x -= 1.5;
-
-
+    LoadEnemyAnimNAudio(){
+        this.deathAudio = this.game.add.audio("enemyDeath",1,false);
     }
     
-    CreateDemonGroup() {
+    CreateEnemyGroup() {
         this.demonGroup = this.game.add.group();
         this.demonGroup.enableBody = true;
         this.demonGroup.physicsBodyType = Phaser.Physics.ARCADE;
-				this.demonGroup.createMultiple(30, "demon");
-				//this.demonGroup.create(this.player.playerSprite.x+100, this.player.playerSprite.y,"demon");
+		this.demonGroup.createMultiple(30, "demon");
         this.demonGroup.setAll("checkWorldBounds", true);
         this.demonGroup.setAll("outOfBoundsKill", true);
-        //this.demonGroup.scale.set(2, 2);
-        this.demonGroup.setAll("scale.x",2);
-        this.demonGroup.setAll("scale.y",2);
-				this.demonGroup.setAll("body.velocity.x",-50);
-				this.demonGroup.x -= 1.5;
+        this.demonGroup.setAll("scale.x",1.5);
+        this.demonGroup.setAll("scale.y",1.5);
+        //this.demonGroup.x -= 1.5;
+        
+        this.dragonGroup = this.game.add.group();
+        this.dragonGroup.enableBody = true;
+        this.dragonGroup.physicsBodyType = Phaser.Physics.ARCADE;
+		this.dragonGroup.createMultiple(30, "demon");
+        this.dragonGroup.setAll("checkWorldBounds", true);
+        this.dragonGroup.setAll("outOfBoundsKill", true);
+        this.dragonGroup.setAll("scale.x",1.5);
+        this.dragonGroup.setAll("scale.y",1.5);
+    }
+
+    EnemyDeath(enemySprite:Sprite){
+        this.deathAudio.play("enemyDeath");
+        enemySprite.kill();
     }
 
     AddEnemy(_enemy: string,_x:number,_y:number) {
@@ -49,7 +60,9 @@ export default class Enemy {
             case "demon":
             this.enemySprite = this.demonGroup.getFirstDead();
             this.enemySprite.reset(_x,_y);
-            //this.enemySprite.body.velocity.x = -50;
+            this.enemySprite.body.velocity.x = -10;
+            this.enemySprite.animations.add("idle",["demon_idle01","demon_idle02"],5,true);
+            this.enemySprite.play("idle");
             //console.log("spawned",_enemy);
             break;
 

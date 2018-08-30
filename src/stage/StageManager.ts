@@ -1,4 +1,4 @@
-import { Game, TileSprite } from "phaser-ce";
+import { Game, TileSprite, Camera, Sprite } from "phaser-ce";
 import Player from "../object/Player";
 import Enemy from "../object/Enemy";
 import ITiledObject from "./ITiledObject";
@@ -9,7 +9,6 @@ export default class StageManager {
     public background: Phaser.TileSprite;
     //private map: Phaser.Tilemap;
     private collisionLayer: Phaser.TilemapLayer;
-    private stage1Layer: Phaser.TilemapLayer;
 
     private currentStage: number;
 
@@ -26,19 +25,18 @@ export default class StageManager {
 
     update() {
         this.BackgroundScrolling(this.background, 5);
-        //this.PlayerCollision();
+        this.CameraScrolling(1.1);
+        this.PlayerCollision();
     }
 
     StartStage(stage: number) {
-        console.log(this.enemy);
         // Add background
         this.background = this.game.add.tileSprite(0, 0, 960, 540, "background");
+        this.background.fixedToCamera = true;
 
         let stageString: string = "stage"+stage;
-
         // Add tilemap
         const map = this.game.add.tilemap(stageString);
-
         // Read the objects
         const objectList = this.getObjectLayer(map, 'object');
         
@@ -66,11 +64,26 @@ export default class StageManager {
         background.tilePosition.x -= speed;
     }
 
+    // Make the camera scrolling
+    CameraScrolling(speed: number) {
+        this.game.camera.x += speed;
+    }
+
     PlayerCollision(){
-        if(this.game.physics.arcade.overlap(this.player,this.enemy)){
-            this.player.PlayerHurt();
-            console.log("hurting player");
-        }
+        this.game.physics.arcade.overlap(this.player.bulletSprite,this.enemy.demonGroup,this.KillEnemy,null,this);
+        this.game.physics.arcade.overlap(this.player.playerSprite,this.enemy.demonGroup,this.TouchEnemy,null,this);
+    }
+
+    // Use for bullet collide with enemy
+    KillEnemy(bulletSprite:Sprite, enemySprite: Sprite){
+        bulletSprite.kill();
+        this.enemy.EnemyDeath(enemySprite);
+    }
+
+    // Use for player collide with enemy
+    TouchEnemy(playerSprite:Sprite, enemySprite: Sprite){
+        this.enemy.EnemyDeath(enemySprite);
+        this.player.PlayerHurt();
     }
 
     getObjectLayer(map: Phaser.Tilemap, layerName: string): ITiledObject[] {

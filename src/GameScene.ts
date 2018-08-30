@@ -13,15 +13,18 @@ export default class GameScene extends TimesteppedScene {
 		// Load images
 		this.game.load.atlasJSONHash("player", "assets/player/player4.png", "assets/player/player4.json");
 		this.game.load.image('bullet', 'assets/player/bullet.png');
-		this.game.load.image('demon', 'assets/enemy/demon.png');
+		this.game.load.atlasJSONHash('demon', 'assets/enemy/demon.png', "assets/enemy/demon.json");
 		this.game.load.image('background', 'assets/stage1.png');
 		this.game.load.atlasJSONHash("playerLife", "assets/player/player_life.png", "assets/player/player_life.json");
-
 		this.game.load.image('background', 'assets/stage1.png');
 		this.game.load.image('collision', 'assets/collision.png');
 
+		this.game.load.audio("playerAttack", "assets/audio/player_attack.ogg");
+		this.game.load.audio("playerDeath", "assets/audio/player_death.ogg");
+		this.game.load.audio("enemyDeath", "assets/audio/enemy_death.ogg");
+
 		// Load tilemap layer
-		this.game.load.tilemap("stage1", "assets/Tilemap/maptest6.json", null, Phaser.Tilemap.TILED_JSON);
+		this.game.load.tilemap("stage1", "assets/Tilemap/maptest7.json", null, Phaser.Tilemap.TILED_JSON);
 	}
 
 	create() {
@@ -37,7 +40,7 @@ export default class GameScene extends TimesteppedScene {
 		this.enemy.create();
 
 		// Add stage
-		this.stageManager = new StageManager(this.game, this.player, this.enemy,1);
+		this.stageManager = new StageManager(this.game, this.player, this.enemy, 1);
 		this.stageManager.create();
 
 		this.game.world.sendToBack(this.stageManager.background);

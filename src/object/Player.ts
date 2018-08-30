@@ -8,11 +8,15 @@ export default class Player {
 
 	public playerSprite: Phaser.Sprite;
 	public bulletSprite: Phaser.Sprite;
+	public lifeGroup: Phaser.Group;
 	public lifeSprite: Phaser.Sprite;
 
+	private atkAudio: Phaser.Sound;
+	private deathAudio: Phaser.Sound;
 	private mouseTemp: Vector2 = { x: 0, y: 0 };
 	private nextFire: number = 0;
-	public lifeGroup: Phaser.Group;
+	private playerSpeed: Vector2 = { x: 40, y: 40 };
+	private isHurt: boolean;
 	private bulletGroup: Phaser.Group;
 	private vectorMath: VectorMath;
 	private game: Game;
@@ -25,7 +29,7 @@ export default class Player {
 
 	create() {
 		this.AddPlayer();
-		this.LoadPlayerAnim();
+		this.LoadPlayerAnimNAudio();
 		this.CreatePlayerLife(3);
 		this.CreateBullet();
 		// Create a click listener to request to hide the mouse pointer if clicked
@@ -35,19 +39,21 @@ export default class Player {
 	update() {
 		this.PlayerMovement();
 		this.PlayerAttack();
-		if(this.game.input.keyboard.isDown(Keyboard.Q))this.PlayerHurt();
+		//this.PlayerHurtUpdate();
 	}
 
-	LoadPlayerAnim() {
+	LoadPlayerAnimNAudio() {
 		let deathFrameName = Phaser.Animation.generateFrameNames("player_death",1,16,"",2);
 
 		this.playerSprite.animations.add("idle", ["player_idle01"], 10, true, false);
 		this.playerSprite.animations.add("attack", ["player_attack01", "player_attack02"], 5, false, false);
 		this.playerSprite.animations.add("death", deathFrameName, 10, false, false);
+		this.atkAudio = this.game.add.audio("playerAttack",.1,false);
+		this.deathAudio = this.game.add.audio("playerDeath",1,false);
 	}
 
 	PlayerMovement() {
-		const playerSpeed: Vector2 = { x: 20, y: 20 }; //speed of player acceleration
+		//const playerSpeed: Vector2 = { x: 40, y: 40 }; //speed of player acceleration
 		const maxPlayerSpeed: number = 200;
 		const minPlayerSpeed: number = -200;
 
@@ -56,13 +62,14 @@ export default class Player {
 		// Limit the max and min speed of player
 		this.playerVelocity.x = Phaser.Math.clamp(this.playerVelocity.x, minPlayerSpeed, maxPlayerSpeed);
 		this.playerVelocity.y = Phaser.Math.clamp(this.playerVelocity.y, minPlayerSpeed, maxPlayerSpeed);
+		this.playerSprite.x = Phaser.Math.clamp(this.playerSprite.x,this.game.camera.x,this.game.camera.x+this.game.width);
 
 		// Use keyboard controll if the mouse pointer is not hidden
 		if (!this.game.input.mouse.locked) {
-			if (this.game.input.keyboard.isDown(Keyboard.RIGHT)) this.playerVelocity.x += playerSpeed.x;
-			if (this.game.input.keyboard.isDown(Keyboard.LEFT)) this.playerVelocity.x -= playerSpeed.x;
-			if (this.game.input.keyboard.isDown(Keyboard.UP)) this.playerVelocity.y -= playerSpeed.y;
-			if (this.game.input.keyboard.isDown(Keyboard.DOWN)) this.playerVelocity.y += playerSpeed.y;
+			if (this.game.input.keyboard.isDown(Keyboard.RIGHT)) this.playerVelocity.x += this.playerSpeed.x;
+			if (this.game.input.keyboard.isDown(Keyboard.LEFT)) this.playerVelocity.x -= this.playerSpeed.x;
+			if (this.game.input.keyboard.isDown(Keyboard.UP)) this.playerVelocity.y -= this.playerSpeed.y;
+			if (this.game.input.keyboard.isDown(Keyboard.DOWN)) this.playerVelocity.y += this.playerSpeed.y;
 		}
 		// Use mouse controll if the mouse point is hidden (NOT FINISHED,still buggy)
 		else if (this.game.input.mouse.locked) {
@@ -87,8 +94,8 @@ export default class Player {
 			else if (mouse.y == this.mouseTemp.y)
 				this.vectorMath.ResetVelocityWithinTime(mouseDirection, 0, .1);
 
-			this.playerVelocity.x += mouseDirection.x * playerSpeed.x;
-			this.playerVelocity.y += mouseDirection.y * playerSpeed.y;
+			this.playerVelocity.x += mouseDirection.x * this.playerSpeed.x;
+			this.playerVelocity.y += mouseDirection.y * this.playerSpeed.y;
 
 			this.mouseTemp = mouse;
 			//
@@ -123,6 +130,7 @@ export default class Player {
 		){
 			this.nextFire = this.game.time.now + firerate;
 			this.playerSprite.play("attack");
+			this.atkAudio.play();
 			this.bulletSprite = this.bulletGroup.getFirstDead();
 			this.bulletSprite.reset(this.playerSprite.x + bulletOffset.x,this.playerSprite.y + bulletOffset.y);
 			this.bulletSprite.body.velocity.x = bulletSpeed;
@@ -136,10 +144,16 @@ export default class Player {
 		// Add the sprite on the screen
 		this.lifeGroup = this.game.add.group();
 		for (let i = 0; i < maxLife; i++) {
-			this.lifeSprite = this.lifeGroup.create((this.game.width / 25) + (i * (this.game.width / 20)), this.game.height / 25, "playerLife", "life_full");
+			this.lifeSprite = this.lifeGroup.create((this.game.width / 25) + (i * (this.game.width / 15)), this.game.height / 25, "playerLife", "life_full");
 		}
 		// Set group scale
-		this.lifeGroup.scale.set(2, 2);
+		//this.lifeGroup.scale.set(2, 2);
+
+		// Set the sprites in group scale
+		this.lifeGroup.setAll("scale.x",2);
+		this.lifeGroup.setAll("scale.y",2);
+		// Set the sprites fixed to camera 
+		this.lifeGroup.setAll("fixedToCamera",true);
 	}
 
 	PlayerHurt() {
@@ -148,16 +162,33 @@ export default class Player {
 			currentLifeSprite = this.lifeGroup.getAt(this.playerLife - 1) as Sprite;
 			currentLifeSprite.frameName = "life_empty";
 			this.playerLife--;
-		}else{
+			this.isHurt = true;
+		}
+		if(this.playerLife<=0){
+			this.playerSpeed = {x:0,y:0};
 			this.HideMouse(false);
+			this.deathAudio.play();
 			this.playerSprite.play("death");
 			this.playerSprite.animations.getAnimation("death").onComplete.add( () =>
 			{this.game.state.start('GameOverScene',true, false);},this);
 		}
 	}
 
+	PlayerHurtUpdate(){
+		//this.game.add.tween(this.playerSprite).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+		if(this.isHurt){
+			var nextHurtReady = this.game.time.now + 1500;
+			this.playerSprite.tint = 0xff0000;
+			this.playerSprite.tint = 0x000000;
+			this.playerSprite.tint = 0xff0000;
+			this.playerSprite.tint = 0x000000;
+		}else if (!this.isHurt){
+			this.playerSprite.tint = 0xffffff;
+		}
+	}
+
 	AddPlayer() {
-		this.playerSprite = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'player');
+		this.playerSprite = this.game.add.sprite(this.game.width / 5, this.game.height / 2, 'player');
 		this.playerSprite.smoothed = false;
 		this.playerSprite.anchor.set(0.5, 0.5);
 		this.playerSprite.scale.set(2, 2);
