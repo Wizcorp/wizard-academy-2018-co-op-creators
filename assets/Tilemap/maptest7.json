@@ -319,6 +319,18 @@
                  "width":0,
                  "x":935.333333333333,
                  "y":96.6666666666667
+                }, 
+                {
+                 "height":0,
+                 "id":54,
+                 "name":"demon",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":475.333333333333,
+                 "y":384
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -327,19 +339,37 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":53,
+ "nextobjectid":55,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"2018.08.06",
  "tileheight":8,
  "tilesets":[
         {
+         "columns":4,
          "firstgid":1,
-         "source":"tiled-files\/collision.tsx"
+         "image":"..\/collision.png",
+         "imageheight":32,
+         "imagewidth":32,
+         "margin":0,
+         "name":"collision",
+         "spacing":0,
+         "tilecount":16,
+         "tileheight":8,
+         "tilewidth":8
         }, 
         {
+         "columns":4,
          "firstgid":17,
-         "source":"tiled-files\/spike.tsx"
+         "image":"..\/obstacle\/spike.png",
+         "imageheight":32,
+         "imagewidth":32,
+         "margin":0,
+         "name":"spike",
+         "spacing":0,
+         "tilecount":16,
+         "tileheight":8,
+         "tilewidth":8
         }],
  "tilewidth":8,
  "type":"map",

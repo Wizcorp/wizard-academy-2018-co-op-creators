@@ -6,10 +6,10 @@ export default class Enemy {
     private game: Game;
     private player: Player;
 
-    private demonGroup: Phaser.Group;
+    public demonGroup: Phaser.Group;
     private demonLife: number = 1;
 
-    public enemySprite: Phaser.Sprite;
+    private enemySprite: Phaser.Sprite;
 
 
     constructor(game: Game, player: Player) {
@@ -23,20 +23,25 @@ export default class Enemy {
 
     update(){
 
+	      //this.demon.body.velocity.x = -0.5;
+	      this.demonGroup.x -= 1.5;
+
+
     }
     
     CreateDemonGroup() {
         this.demonGroup = this.game.add.group();
         this.demonGroup.enableBody = true;
         this.demonGroup.physicsBodyType = Phaser.Physics.ARCADE;
-        this.demonGroup.createMultiple(30, "demon");
+				this.demonGroup.createMultiple(30, "demon");
+				//this.demonGroup.create(this.player.playerSprite.x+100, this.player.playerSprite.y,"demon");
         this.demonGroup.setAll("checkWorldBounds", true);
         this.demonGroup.setAll("outOfBoundsKill", true);
         //this.demonGroup.scale.set(2, 2);
         this.demonGroup.setAll("scale.x",2);
         this.demonGroup.setAll("scale.y",2);
-        this.demonGroup.setAll("body.velocity.x",-50);
-
+				this.demonGroup.setAll("body.velocity.x",-50);
+				this.demonGroup.x -= 1.5;
     }
 
     AddEnemy(_enemy: string,_x:number,_y:number) {
