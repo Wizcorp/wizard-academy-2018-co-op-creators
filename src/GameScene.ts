@@ -22,6 +22,7 @@ export default class GameScene extends TimesteppedScene {
 		this.game.load.audio("playerAttack", "assets/audio/player_attack.ogg");
 		this.game.load.audio("playerDeath", "assets/audio/player_death.ogg");
 		this.game.load.audio("enemyDeath", "assets/audio/enemy_death.ogg");
+		//this.game.load.audio("bgm","assets/audio/bgm.ogg");
 
 		// Load tilemap layer
 		this.game.load.tilemap("stage1", "assets/Tilemap/maptest7.json", null, Phaser.Tilemap.TILED_JSON);
