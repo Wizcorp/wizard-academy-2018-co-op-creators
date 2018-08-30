@@ -23,7 +23,7 @@ export default class GameScene extends TimesteppedScene {
 
 		this.game.load.audio("stage1BGM","assets/audio/BGM.ogg");
 		this.game.load.audio("playerAttack", "assets/audio/player_attack.ogg");
-		this.game.load.audio("playerHurt","assets/audio/player/player_hurt.ogg");
+		this.game.load.audio("playerHurt","assets/audio/player_hurt.ogg");
 		this.game.load.audio("playerDeath", "assets/audio/player_death.ogg");
 		this.game.load.audio("enemyHurt","assets/audio/enemy_hurt.ogg");
 		this.game.load.audio("enemyDeath", "assets/audio/enemy_death.ogg");
