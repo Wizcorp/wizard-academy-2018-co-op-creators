@@ -8,6 +8,7 @@ export default class Player {
 	public isHurt: boolean;
 
 	public playerSprite: Phaser.Sprite;
+	public bulletGroup: Phaser.Group;
 	public bulletSprite: Phaser.Sprite;
 	public lifeGroup: Phaser.Group;
 	public lifeSprite: Phaser.Sprite;
@@ -19,7 +20,6 @@ export default class Player {
 	private nextFire: number = 0;
 	private playerSpeed: Vector2 = { x: 40, y: 40 };
 	private nextHurtReady: number;
-	private bulletGroup: Phaser.Group;
 	private vectorMath: VectorMath;
 	private game: Game;
 

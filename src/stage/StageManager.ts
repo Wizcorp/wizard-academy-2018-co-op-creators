@@ -83,8 +83,8 @@ export default class StageManager {
     }
 
     PlayerCollision(){
-        this.game.physics.arcade.overlap(this.player.bulletSprite,this.enemy.dragonGroup,this.HurtEnemy,null,this);
-        this.game.physics.arcade.overlap(this.player.bulletSprite,this.enemy.demonGroup,this.HurtEnemy,null,this);
+        this.game.physics.arcade.overlap(this.player.bulletGroup,this.enemy.dragonGroup,this.HurtEnemy,null,this);
+        this.game.physics.arcade.overlap(this.player.bulletGroup,this.enemy.demonGroup,this.HurtEnemy,null,this);
         this.game.physics.arcade.overlap(this.player.playerSprite,this.enemy.dragonGroup,this.TouchEnemy,null,this);
         this.game.physics.arcade.overlap(this.player.playerSprite,this.enemy.demonGroup,this.TouchEnemy,null,this);
     }
