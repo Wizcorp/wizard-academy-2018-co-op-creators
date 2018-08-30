@@ -1,4 +1,4 @@
-import { Game, TileSprite, Camera, Sprite } from "phaser-ce";
+import { Game, TileSprite, Camera, Sprite, Sound } from "phaser-ce";
 import Player from "../object/Player";
 import Enemy from "../object/Enemy";
 import ITiledObject from "./ITiledObject";
@@ -7,7 +7,7 @@ export default class StageManager {
     private player: Player;
     private enemy: Enemy;
     public background: Phaser.TileSprite;
-    //private map: Phaser.Tilemap;
+    private stageBGM: Sound;
     private collisionLayer: Phaser.TilemapLayer;
 
     private currentStage: number;
@@ -42,10 +42,13 @@ export default class StageManager {
         
         // Add eneny in the object spawn point
         for (const object of objectList) {
-            //console.log('Loaded object', object);
             if(object.name === "demon"){
-                console.log("add demon");
+                console.log("added demon");
                 this.enemy.AddEnemy("demon",object.x,object.y);
+            }
+            if(object.name === "dragon"){
+                console.log("added dragon");
+                this.enemy.AddEnemy("dragon",object.x,object.y);
             }
        }
 
@@ -57,6 +60,16 @@ export default class StageManager {
         this.game.physics.arcade.enable(this.collisionLayer);
         map.setCollision(161, true, "Collision"); // 161 = first grid
         this.game.physics.arcade.collide(this.player, this.collisionLayer);
+
+        switch(stage){
+            case 1:
+                this.stageBGM = this.game.add.audio("stage1BGM",.1,true);
+                //this.stageBGM.play();
+
+            default:
+                this.stageBGM = this.game.add.audio("stage1BGM",.1,true);
+                //this.stageBGM.play();
+        }
     }
 
     // Make the background scrolling
@@ -70,19 +83,22 @@ export default class StageManager {
     }
 
     PlayerCollision(){
-        this.game.physics.arcade.overlap(this.player.bulletSprite,this.enemy.demonGroup,this.KillEnemy,null,this);
+        this.game.physics.arcade.overlap(this.player.bulletSprite,this.enemy.dragonGroup,this.HurtEnemy,null,this);
+        this.game.physics.arcade.overlap(this.player.bulletSprite,this.enemy.demonGroup,this.HurtEnemy,null,this);
+        this.game.physics.arcade.overlap(this.player.playerSprite,this.enemy.dragonGroup,this.TouchEnemy,null,this);
         this.game.physics.arcade.overlap(this.player.playerSprite,this.enemy.demonGroup,this.TouchEnemy,null,this);
     }
 
     // Use for bullet collide with enemy
-    KillEnemy(bulletSprite:Sprite, enemySprite: Sprite){
+    HurtEnemy(bulletSprite:Sprite, enemySprite: Sprite){
+        console.log("hitted!");
         bulletSprite.kill();
-        this.enemy.EnemyDeath(enemySprite);
+        this.enemy.EnemyHurt(enemySprite);
     }
 
     // Use for player collide with enemy
     TouchEnemy(playerSprite:Sprite, enemySprite: Sprite){
-        this.enemy.EnemyDeath(enemySprite);
+        if(!this.player.isHurt)this.enemy.EnemyHurt(enemySprite);
         this.player.PlayerHurt();
     }
 

@@ -5,6 +5,7 @@ import { Vector2 } from "../math/VectorMath";
 export default class Player {
 	public playerVelocity: Vector2;
 	public playerLife: number;
+	public isHurt: boolean;
 
 	public playerSprite: Phaser.Sprite;
 	public bulletSprite: Phaser.Sprite;
@@ -13,10 +14,11 @@ export default class Player {
 
 	private atkAudio: Phaser.Sound;
 	private deathAudio: Phaser.Sound;
+	private hurtAudio: Phaser.Sound;
 	private mouseTemp: Vector2 = { x: 0, y: 0 };
 	private nextFire: number = 0;
 	private playerSpeed: Vector2 = { x: 40, y: 40 };
-	private isHurt: boolean;
+	private nextHurtReady: number;
 	private bulletGroup: Phaser.Group;
 	private vectorMath: VectorMath;
 	private game: Game;
@@ -39,7 +41,7 @@ export default class Player {
 	update() {
 		this.PlayerMovement();
 		this.PlayerAttack();
-		//this.PlayerHurtUpdate();
+		this.PlayerHurtUpdate();
 	}
 
 	LoadPlayerAnimNAudio() {
@@ -48,7 +50,9 @@ export default class Player {
 		this.playerSprite.animations.add("idle", ["player_idle01"], 10, true, false);
 		this.playerSprite.animations.add("attack", ["player_attack01", "player_attack02"], 5, false, false);
 		this.playerSprite.animations.add("death", deathFrameName, 10, false, false);
-		this.atkAudio = this.game.add.audio("playerAttack",.1,false);
+		this.playerSprite.animations.add("damaged",["player_idle01","player_death16"], 8,true);
+		this.atkAudio = this.game.add.audio("playerAttack",.2,false);
+		this.hurtAudio = this.game.add.audio("playerHurt",1,false);
 		this.deathAudio = this.game.add.audio("playerDeath",1,false);
 	}
 
@@ -86,13 +90,11 @@ export default class Player {
 
 			if (mouse.x > this.mouseTemp.x) mouseDirection.x++;
 			else if (mouse.x < this.mouseTemp.x) mouseDirection.x--;
-			else if (mouse.x == this.mouseTemp.x)
-				this.vectorMath.ResetVelocityWithinTime(mouseDirection, .1, 0);
+			else if (mouse.x == this.mouseTemp.x)this.vectorMath.ResetVelocityWithinTime(mouseDirection, .1, 0);
 
 			if (mouse.y > this.mouseTemp.y) mouseDirection.y++;
 			else if (mouse.y < this.mouseTemp.y) mouseDirection.y--;
-			else if (mouse.y == this.mouseTemp.y)
-				this.vectorMath.ResetVelocityWithinTime(mouseDirection, 0, .1);
+			else if (mouse.y == this.mouseTemp.y)this.vectorMath.ResetVelocityWithinTime(mouseDirection, 0, .1);
 
 			this.playerVelocity.x += mouseDirection.x * this.playerSpeed.x;
 			this.playerVelocity.y += mouseDirection.y * this.playerSpeed.y;
@@ -113,15 +115,16 @@ export default class Player {
 		this.bulletGroup = this.game.add.group();
 		this.bulletGroup.enableBody = true;
 		this.bulletGroup.physicsBodyType = Phaser.Physics.ARCADE;
-		this.bulletGroup.createMultiple(30, "bullet");
+		this.bulletGroup.createMultiple(50, "bullet");
 		this.bulletGroup.setAll("checkWorldBounds", true);
 		this.bulletGroup.setAll("outOfBoundsKill", true);
 	}
 
 	PlayerAttack() {
 		const bulletOffset: Vector2 = { x: 10, y: 0 };
-		const bulletSpeed: number = 200;
+		const bulletSpeed: number = 400;
 		const firerate: number = 500;
+		const bulletLifespan = 8000;
 
 		if (
 		this.game.input.keyboard.isDown(Keyboard.SPACEBAR) && 
@@ -134,6 +137,7 @@ export default class Player {
 			this.bulletSprite = this.bulletGroup.getFirstDead();
 			this.bulletSprite.reset(this.playerSprite.x + bulletOffset.x,this.playerSprite.y + bulletOffset.y);
 			this.bulletSprite.body.velocity.x = bulletSpeed;
+			this.bulletSprite.lifespan = bulletLifespan;
 		}
 		this.playerSprite.animations.getAnimation("attack").onComplete.add( () =>
 		{this.playerSprite.play("idle");},this);
@@ -157,11 +161,13 @@ export default class Player {
 	}
 
 	PlayerHurt() {
-		if(this.playerLife>0){
+		if(this.playerLife>0 && !this.isHurt){
 			let currentLifeSprite: Phaser.Sprite;
 			currentLifeSprite = this.lifeGroup.getAt(this.playerLife - 1) as Sprite;
 			currentLifeSprite.frameName = "life_empty";
 			this.playerLife--;
+			this.hurtAudio.play();
+			this.nextHurtReady = this.game.time.now + 1500;
 			this.isHurt = true;
 		}
 		if(this.playerLife<=0){
@@ -176,14 +182,12 @@ export default class Player {
 
 	PlayerHurtUpdate(){
 		//this.game.add.tween(this.playerSprite).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-		if(this.isHurt){
-			var nextHurtReady = this.game.time.now + 1500;
-			this.playerSprite.tint = 0xff0000;
-			this.playerSprite.tint = 0x000000;
-			this.playerSprite.tint = 0xff0000;
-			this.playerSprite.tint = 0x000000;
-		}else if (!this.isHurt){
-			this.playerSprite.tint = 0xffffff;
+		if(this.isHurt && this.playerLife > 0){
+			this.playerSprite.play("damaged");
+			if(this.game.time.now >= this.nextHurtReady){
+				this.playerSprite.play("idle");
+				this.isHurt = false;
+			}
 		}
 	}
 
