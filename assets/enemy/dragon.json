@@ -32,7 +32,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"demon_idle01":
+"dragon_idle01":
 {
 	"frame": {"x":137,"y":1,"w":32,"h":32},
 	"rotated": false,
@@ -40,7 +40,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"demon_idle02":
+"dragon_idle02":
 {
 	"frame": {"x":171,"y":1,"w":32,"h":32},
 	"rotated": false,
@@ -51,10 +51,10 @@
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "demon.png",
+	"image": "dragon.png",
 	"format": "RGBA8888",
 	"size": {"w":204,"h":34},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:22e1270a7cdfcc08c659fded58bfec9e:f141d1cd5b9299a8295f00390e109dc7:77480cee959c6322d08091b7933ffad5$"
+	"smartupdate": "$TexturePacker:SmartUpdate:fc22edd5bc110dbccdd3b691f7e1220d:62258eaa59b490cb8a84781aaf71275c:581e962efa07d1f36d42214f5f5ec489$"
 }
 }
