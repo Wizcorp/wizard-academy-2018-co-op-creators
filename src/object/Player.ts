@@ -130,7 +130,8 @@ export default class Player {
 		if (
 			this.game.input.keyboard.isDown(Keyboard.SPACEBAR) &&
 			this.game.time.now > this.nextFire &&
-			this.bulletGroup.countDead() > 0
+			this.bulletGroup.countDead() > 0 &&
+			this.playerLife > 0 
 		) {
 			this.nextFire = this.game.time.now + firerate;
 			this.playerSprite.play("attack");

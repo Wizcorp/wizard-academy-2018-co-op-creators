@@ -1,4 +1,4 @@
-import { Game, TileSprite, Camera, Sprite, Sound } from "phaser-ce";
+import { Game, TileSprite, Camera, Sprite , Sound } from "phaser-ce";
 import Player from "../object/Player";
 import Enemy from "../object/Enemy";
 import ITiledObject from "./ITiledObject";
@@ -26,7 +26,7 @@ export default class StageManager {
 
     update() {
         this.BackgroundScrolling(this.background, 5);
-        this.CameraScrolling(1.1);
+        //this.CameraScrolling(1.1);
         this.PlayerCollision();
     }
 
@@ -53,6 +53,10 @@ export default class StageManager {
             }
             if (object.name === "ghost") {
                 this.enemy.AddEnemy("ghost", object.x, object.y);
+                console.log("added", object.name);
+            }
+            if (object.name === "boss") {
+                this.enemy.AddEnemy("boss", object.x, object.y);
                 console.log("added", object.name);
             }
         }
@@ -91,10 +95,13 @@ export default class StageManager {
         this.game.physics.arcade.overlap(this.player.bulletGroup, this.enemy.dragonGroup, this.HurtEnemy, null, this);
         this.game.physics.arcade.overlap(this.player.bulletGroup, this.enemy.demonGroup, this.HurtEnemy, null, this);
         this.game.physics.arcade.overlap(this.player.bulletGroup, this.enemy.ghostGroup, this.HurtEnemy, null, this);
-
+        this.game.physics.arcade.overlap(this.player.bulletGroup, this.enemy.bossGroup, this.HurtEnemy, null, this);
+        
         this.game.physics.arcade.overlap(this.player.playerSprite, this.enemy.dragonGroup, this.TouchEnemy, null, this);
         this.game.physics.arcade.overlap(this.player.playerSprite, this.enemy.demonGroup, this.TouchEnemy, null, this);
         this.game.physics.arcade.overlap(this.player.playerSprite, this.enemy.ghostGroup, this.TouchEnemy, null, this);
+        this.game.physics.arcade.overlap(this.player.playerSprite, this.enemy.bossGroup, this.TouchEnemy, null, this);
+        this.game.physics.arcade.overlap(this.player.playerSprite, this.enemy.bossBulletGroup, this.TouchEnemy, null, this);
     }
 
     // Use for bullet collide with enemy
