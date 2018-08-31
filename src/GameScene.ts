@@ -17,6 +17,7 @@ export default class GameScene extends TimesteppedScene {
 		this.game.load.atlasJSONHash("dragon","assets/enemy/dragon.png","assets/enemy/dragon.json");
 		this.game.load.atlasJSONHash("boss","assets/enemy/boss.png","assets/enemy/boss.json");
 		this.game.load.atlasJSONHash("ghost","assets/enemy/ghost.png","assets/enemy/ghost.json");
+		this.game.load.image('bossBullet', 'assets/enemy/bossbullet.png');
 
 		this.game.load.image('background', 'assets/stage1.png');
 		this.game.load.atlasJSONHash("playerLife", "assets/player/player_life.png", "assets/player/player_life.json");
@@ -24,6 +25,7 @@ export default class GameScene extends TimesteppedScene {
 		this.game.load.image('collision', 'assets/collision.png');
 
 		this.game.load.audio("stage1BGM","assets/audio/StageBGM.ogg");
+		this.game.load.audio("bossBGM","assets/audio/BossBGM.ogg");
 		this.game.load.audio("playerAttack", "assets/audio/player_attack.ogg");
 		this.game.load.audio("playerHurt","assets/audio/player_hurt.ogg");
 		this.game.load.audio("playerDeath", "assets/audio/player_death.ogg");
@@ -31,7 +33,7 @@ export default class GameScene extends TimesteppedScene {
 		this.game.load.audio("enemyDeath", "assets/audio/enemy_death.ogg");
 
 		// Load tilemap layer
-		this.game.load.tilemap("stage1", "assets/Tilemap/maptest7.json", null, Phaser.Tilemap.TILED_JSON);
+		this.game.load.tilemap("stage1", "assets/Tilemap/maptest8.json", null, Phaser.Tilemap.TILED_JSON);
 	}
 
 	create() {
