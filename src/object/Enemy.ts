@@ -8,6 +8,7 @@ export default class Enemy {
 
     public demonGroup: Phaser.Group;
     public dragonGroup: Phaser.Group;
+    public ghostGroup: Phaser.Group;
 
     private enemySprite: Phaser.Sprite;
     private deathAudio: Phaser.Sound;
@@ -23,74 +24,110 @@ export default class Enemy {
         this.CreateEnemyGroup();
     }
 
-    update(){
+    update() {
     }
 
-    LoadEnemyAudio(){
-        this.deathAudio = this.game.add.audio("enemyDeath",1,false);
-        this.hurtAudio = this.game.add.audio("enemyHurt",1,false);
+    LoadEnemyAudio() {
+        this.deathAudio = this.game.add.audio("enemyDeath", 1, false);
+        this.hurtAudio = this.game.add.audio("enemyHurt", 1, false);
     }
-    
+
     CreateEnemyGroup() {
         this.demonGroup = this.game.add.group();
         this.demonGroup.enableBody = true;
         this.demonGroup.physicsBodyType = Phaser.Physics.ARCADE;
-		this.demonGroup.createMultiple(50, "demon");
+        this.demonGroup.createMultiple(50, "demon");
         this.demonGroup.setAll("checkWorldBounds", true);
         this.demonGroup.setAll("outOfBoundsKill", true);
-        this.demonGroup.setAll("scale.x",1.5);
-        this.demonGroup.setAll("scale.y",1.5);
-        
+        this.demonGroup.setAll("scale.x", 1.5);
+        this.demonGroup.setAll("scale.y", 1.5);
+
         this.dragonGroup = this.game.add.group();
         this.dragonGroup.enableBody = true;
         this.dragonGroup.physicsBodyType = Phaser.Physics.ARCADE;
-		this.dragonGroup.createMultiple(50, "dragon");
+        this.dragonGroup.createMultiple(30, "dragon");
         this.dragonGroup.setAll("checkWorldBounds", true);
         this.dragonGroup.setAll("outOfBoundsKill", true);
-        this.dragonGroup.setAll("scale.x",2);
-        this.dragonGroup.setAll("scale.y",2);
+        this.dragonGroup.setAll("scale.x", 2.5);
+        this.dragonGroup.setAll("scale.y", 2.5);
+
+        this.ghostGroup = this.game.add.group();
+        this.ghostGroup.enableBody = true;
+        this.ghostGroup.physicsBodyType = Phaser.Physics.ARCADE;
+        this.ghostGroup.createMultiple(30, "ghost");
+        this.ghostGroup.setAll("checkWorldBounds", true);
+        this.ghostGroup.setAll("outOfBoundsKill", true);
+        this.ghostGroup.setAll("scale.x", 1.5);
+        this.ghostGroup.setAll("scale.y", 1.5);
     }
 
-    EnemyHurt(enemySprite:Sprite){
+    EnemyHurt(enemySprite: Sprite) {
         enemySprite.damage(1);
         this.hurtAudio.play();
         // use 1 for death because sprite will get auto destroied when it become 0
-        if(enemySprite.health <= 1){
-            console.log("1hp!");
-            this.enemySprite.body.enable = false;
+        if (enemySprite.health <= 1) {
+            enemySprite.body.enable = false;
             this.deathAudio.play();
-            this.enemySprite.play("death");
-            this.enemySprite.animations.getAnimation("death").onComplete.add( () =>
-            {this.enemySprite.kill();},this);
+            enemySprite.play("death");
+            enemySprite.animations.getAnimation("death").onComplete.add(() => { enemySprite.kill(); }, this);
         }
     }
 
-    AddEnemy(_enemy: string,_x:number,_y:number) {
-        switch(_enemy){
+    AddEnemy(_enemy: string, _x: number, _y: number) {
+        switch (_enemy) {
             case "demon":
-            this.enemySprite = this.demonGroup.getFirstDead();
-            this.enemySprite.reset(_x,_y);
-            this.enemySprite.body.velocity.x = -25;
-            this.enemySprite.health = 2;
-            this.enemySprite.animations.add("idle",["demon_idle01","demon_idle02"],5,true);
-            this.enemySprite.animations.add("death",["death01","death02","death03","death04"],5,false);
-            this.enemySprite.play("idle");
-            console.log(this.enemySprite);
-            break;
+                this.DemonBehavior(this.enemySprite, _x, _y);
+                break;
 
             case "dragon":
-            this.enemySprite = this.dragonGroup.getFirstDead();
-            this.enemySprite.reset(_x,_y);
-            this.enemySprite.body.velocity.x = -15;
-            this.enemySprite.health = 4;
-            this.enemySprite.animations.add("idle",["dragon_idle01","dragon_idle02"],5,true);
-            this.enemySprite.animations.add("death",["death01","death02","death03","death04"],5,false);
-            this.enemySprite.play("idle");
-            console.log(this.enemySprite);
-            break;
+                this.DragonBehavior(this.enemySprite, _x, _y);
+                break;
+
+            case "ghost":
+                this.GhostBehavior(this.enemySprite, _x, _y);
+                break;
+
+            case "boss":
+                this.enemySprite = this.game.add.sprite(_x, _y, "boss");
+                this.enemySprite.health = 50;
+                break;
 
             default:
-            break;
+                break;
         }
     }
+
+    DemonBehavior(enemySprite: Sprite, _x: number, _y: number) {
+        enemySprite = this.demonGroup.getFirstDead();
+        enemySprite.reset(_x, _y);
+        enemySprite.body.velocity.x = -25;
+        enemySprite.health = 1+1;
+        enemySprite.animations.add("idle", ["demon_idle01", "demon_idle02"], 5, true);
+        enemySprite.animations.add("death", ["death01", "death02", "death03", "death04"], 5, false);
+        enemySprite.play("idle");
+    }
+
+    DragonBehavior(enemySprite: Sprite, _x: number, _y: number) {
+        enemySprite = this.dragonGroup.getFirstDead();
+        enemySprite.reset(_x, _y);
+        enemySprite.body.velocity.x = -15;
+        enemySprite.health = 1+4;
+        enemySprite.animations.add("idle", ["dragon_idle01", "dragon_idle02"], 5, true);
+        enemySprite.animations.add("death", ["death01", "death02", "death03", "death04"], 5, false);
+        enemySprite.play("idle");
+    }
+
+    GhostBehavior(enemySprite: Sprite, _x: number, _y: number) {
+        enemySprite = this.ghostGroup.getFirstDead();
+        enemySprite.reset(_x, _y);
+        enemySprite.health = 1+2;
+        enemySprite.animations.add("idle", ["ghost_idle01", "ghost_idle02"], 5, true);
+        enemySprite.animations.add("idle_ghost", ["ghost_idle01_transparent", "ghost_idle02_transparent"], 5, true);
+        enemySprite.animations.add("death", ["death01", "death02", "death03", "death04"], 5, false);
+        enemySprite.play("idle_ghost");
+        enemySprite.body.velocity.x = -15;
+        let ghostTween = this.game.add.tween(enemySprite).to({y: enemySprite.y+70}, 1000, Phaser.Easing.Sinusoidal.InOut,true,0,-1,true);
+    }
+
+
 }

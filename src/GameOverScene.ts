@@ -25,7 +25,7 @@ export default class TitleScene extends TimesteppedScene {
 		title.fontSize = 45;
 		title.fill = '#ffffff';
 
-		const gameOverScreen = this.game.add.sprite(0,0,'gameOverScreen');
+		const gameOverScreen = this.game.add.sprite(0, 0, 'gameOverScreen');
 		const button = this.game.add.button(this.game.width / 2, 270, 'restartButton', this.OnClick, this, 2, 1, 0);
 		button.anchor.set(0.5, 0.5);
 	}
@@ -35,17 +35,17 @@ export default class TitleScene extends TimesteppedScene {
 	 */
 	fixedUpdate(dt: number) {
 		// Skip to next scene with space or return
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.ENTER) 
-		|| this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)
-		){
+		if (this.game.input.keyboard.isDown(Phaser.Keyboard.ENTER)
+			|| this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)
+		) {
 			this.OnClick();
 		}
-}
+	}
 
 	/**
 	 * Callback for button.
 	 */
 	OnClick() {
-		this.game.state.start('GameScene',true, false);
+		this.game.state.start('GameScene', true, false);
 	}
 }

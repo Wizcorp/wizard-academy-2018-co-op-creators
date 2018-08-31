@@ -12,7 +12,7 @@ export default class StageManager {
 
     private currentStage: number;
 
-    constructor(_game: Game, _player: Player,_enemy: Enemy, _currentStage: number) {
+    constructor(_game: Game, _player: Player, _enemy: Enemy, _currentStage: number) {
         this.game = _game;
         this.player = _player;
         this.enemy = _enemy;
@@ -34,23 +34,27 @@ export default class StageManager {
         this.background = this.game.add.tileSprite(0, 0, 960, 540, "background");
         this.background.fixedToCamera = true;
 
-        let stageString: string = "stage"+stage;
+        let stageString: string = "stage" + stage;
         // Add tilemap
         const map = this.game.add.tilemap(stageString);
         // Read the objects
         const objectList = this.getObjectLayer(map, 'object');
-        
+
         // Add eneny in the object spawn point
         for (const object of objectList) {
-            if(object.name === "demon"){
-                console.log("added demon");
-                this.enemy.AddEnemy("demon",object.x,object.y);
+            if (object.name === "demon") {
+                this.enemy.AddEnemy("demon", object.x, object.y);
+                console.log("added", object.name);
             }
-            if(object.name === "dragon"){
-                console.log("added dragon");
-                this.enemy.AddEnemy("dragon",object.x,object.y);
+            if (object.name === "dragon") {
+                this.enemy.AddEnemy("dragon", object.x, object.y);
+                console.log("added", object.name);
             }
-       }
+            if (object.name === "ghost") {
+                this.enemy.AddEnemy("ghost", object.x, object.y);
+                console.log("added", object.name);
+            }
+        }
 
         // Add collision layer
         map.addTilesetImage("collision", "collision");
@@ -61,14 +65,14 @@ export default class StageManager {
         map.setCollision(161, true, "Collision"); // 161 = first grid
         this.game.physics.arcade.collide(this.player, this.collisionLayer);
 
-        switch(stage){
+        switch (stage) {
             case 1:
-                this.stageBGM = this.game.add.audio("stage1BGM",.1,true);
-                //this.stageBGM.play();
+                this.stageBGM = this.game.add.audio("stage1BGM", .3, true);
+                this.stageBGM.play();
 
             default:
-                this.stageBGM = this.game.add.audio("stage1BGM",.1,true);
-                //this.stageBGM.play();
+                this.stageBGM = this.game.add.audio("stage1BGM", .3, true);
+                this.stageBGM.play();
         }
     }
 
@@ -82,23 +86,26 @@ export default class StageManager {
         this.game.camera.x += speed;
     }
 
-    PlayerCollision(){
-        this.game.physics.arcade.overlap(this.player.bulletGroup,this.enemy.dragonGroup,this.HurtEnemy,null,this);
-        this.game.physics.arcade.overlap(this.player.bulletGroup,this.enemy.demonGroup,this.HurtEnemy,null,this);
-        this.game.physics.arcade.overlap(this.player.playerSprite,this.enemy.dragonGroup,this.TouchEnemy,null,this);
-        this.game.physics.arcade.overlap(this.player.playerSprite,this.enemy.demonGroup,this.TouchEnemy,null,this);
+    PlayerCollision() {
+        this.game.physics.arcade.overlap(this.player.bulletGroup, this.enemy.dragonGroup, this.HurtEnemy, null, this);
+        this.game.physics.arcade.overlap(this.player.bulletGroup, this.enemy.demonGroup, this.HurtEnemy, null, this);
+        this.game.physics.arcade.overlap(this.player.bulletGroup, this.enemy.ghostGroup, this.HurtEnemy, null, this);
+
+        this.game.physics.arcade.overlap(this.player.playerSprite, this.enemy.dragonGroup, this.TouchEnemy, null, this);
+        this.game.physics.arcade.overlap(this.player.playerSprite, this.enemy.demonGroup, this.TouchEnemy, null, this);
+        this.game.physics.arcade.overlap(this.player.playerSprite, this.enemy.ghostGroup, this.TouchEnemy, null, this);
     }
 
     // Use for bullet collide with enemy
-    HurtEnemy(bulletSprite:Sprite, enemySprite: Sprite){
+    HurtEnemy(bulletSprite: Sprite, enemySprite: Sprite) {
         console.log("hitted!");
         bulletSprite.kill();
         this.enemy.EnemyHurt(enemySprite);
     }
 
     // Use for player collide with enemy
-    TouchEnemy(playerSprite:Sprite, enemySprite: Sprite){
-        if(!this.player.isHurt)this.enemy.EnemyHurt(enemySprite);
+    TouchEnemy(playerSprite: Sprite, enemySprite: Sprite) {
+        if (!this.player.isHurted) this.enemy.EnemyHurt(enemySprite);
         this.player.PlayerHurt();
     }
 

@@ -5,7 +5,7 @@ import { Vector2 } from "../math/VectorMath";
 export default class Player {
 	public playerVelocity: Vector2;
 	public playerLife: number;
-	public isHurt: boolean;
+	public isHurted: boolean;
 
 	public playerSprite: Phaser.Sprite;
 	public bulletGroup: Phaser.Group;
@@ -35,25 +35,26 @@ export default class Player {
 		this.CreatePlayerLife(3);
 		this.CreateBullet();
 		// Create a click listener to request to hide the mouse pointer if clicked
-		this.HideMouse(true);
+		//this.HideMouse(true);
 	}
 
 	update() {
 		this.PlayerMovement();
 		this.PlayerAttack();
 		this.PlayerHurtUpdate();
+		if (this.game.input.keyboard.isDown(Keyboard.Q)) this.PlayerHurt();
 	}
 
 	LoadPlayerAnimNAudio() {
-		let deathFrameName = Phaser.Animation.generateFrameNames("player_death",1,16,"",2);
+		let deathFrameName = Phaser.Animation.generateFrameNames("player_death", 1, 16, "", 2);
 
 		this.playerSprite.animations.add("idle", ["player_idle01"], 10, true, false);
 		this.playerSprite.animations.add("attack", ["player_attack01", "player_attack02"], 5, false, false);
 		this.playerSprite.animations.add("death", deathFrameName, 10, false, false);
-		this.playerSprite.animations.add("damaged",["player_idle01","player_death16"], 8,true);
-		this.atkAudio = this.game.add.audio("playerAttack",.2,false);
-		this.hurtAudio = this.game.add.audio("playerHurt",1,false);
-		this.deathAudio = this.game.add.audio("playerDeath",1,false);
+		this.playerSprite.animations.add("damaged", ["player_idle01", "player_death16"], 8, true);
+		this.atkAudio = this.game.add.audio("playerAttack", .2, false);
+		this.hurtAudio = this.game.add.audio("playerHurt", 1, false);
+		this.deathAudio = this.game.add.audio("playerDeath", 1, false);
 	}
 
 	PlayerMovement() {
@@ -66,7 +67,7 @@ export default class Player {
 		// Limit the max and min speed of player
 		this.playerVelocity.x = Phaser.Math.clamp(this.playerVelocity.x, minPlayerSpeed, maxPlayerSpeed);
 		this.playerVelocity.y = Phaser.Math.clamp(this.playerVelocity.y, minPlayerSpeed, maxPlayerSpeed);
-		this.playerSprite.x = Phaser.Math.clamp(this.playerSprite.x,this.game.camera.x,this.game.camera.x+this.game.width);
+		this.playerSprite.x = Phaser.Math.clamp(this.playerSprite.x, this.game.camera.x, this.game.camera.x + this.game.width);
 
 		// Use keyboard controll if the mouse pointer is not hidden
 		if (!this.game.input.mouse.locked) {
@@ -90,11 +91,11 @@ export default class Player {
 
 			if (mouse.x > this.mouseTemp.x) mouseDirection.x++;
 			else if (mouse.x < this.mouseTemp.x) mouseDirection.x--;
-			else if (mouse.x == this.mouseTemp.x)this.vectorMath.ResetVelocityWithinTime(mouseDirection, .1, 0);
+			else if (mouse.x == this.mouseTemp.x) this.vectorMath.ResetVelocityWithinTime(mouseDirection, .1, 0);
 
 			if (mouse.y > this.mouseTemp.y) mouseDirection.y++;
 			else if (mouse.y < this.mouseTemp.y) mouseDirection.y--;
-			else if (mouse.y == this.mouseTemp.y)this.vectorMath.ResetVelocityWithinTime(mouseDirection, 0, .1);
+			else if (mouse.y == this.mouseTemp.y) this.vectorMath.ResetVelocityWithinTime(mouseDirection, 0, .1);
 
 			this.playerVelocity.x += mouseDirection.x * this.playerSpeed.x;
 			this.playerVelocity.y += mouseDirection.y * this.playerSpeed.y;
@@ -111,7 +112,7 @@ export default class Player {
 		this.vectorMath.ResetVelocityWithinTime(this.playerVelocity, 10);
 	}
 
-	CreateBullet(){
+	CreateBullet() {
 		this.bulletGroup = this.game.add.group();
 		this.bulletGroup.enableBody = true;
 		this.bulletGroup.physicsBodyType = Phaser.Physics.ARCADE;
@@ -124,23 +125,22 @@ export default class Player {
 		const bulletOffset: Vector2 = { x: 10, y: 0 };
 		const bulletSpeed: number = 400;
 		const firerate: number = 500;
-		const bulletLifespan = 8000;
+		const bulletLifespan = 1200;
 
 		if (
-		this.game.input.keyboard.isDown(Keyboard.SPACEBAR) && 
-		this.game.time.now > this.nextFire &&
-		this.bulletGroup.countDead() > 0
-		){
+			this.game.input.keyboard.isDown(Keyboard.SPACEBAR) &&
+			this.game.time.now > this.nextFire &&
+			this.bulletGroup.countDead() > 0
+		) {
 			this.nextFire = this.game.time.now + firerate;
 			this.playerSprite.play("attack");
 			this.atkAudio.play();
 			this.bulletSprite = this.bulletGroup.getFirstDead();
-			this.bulletSprite.reset(this.playerSprite.x + bulletOffset.x,this.playerSprite.y + bulletOffset.y);
+			this.bulletSprite.reset(this.playerSprite.x + bulletOffset.x, this.playerSprite.y + bulletOffset.y);
 			this.bulletSprite.body.velocity.x = bulletSpeed;
 			this.bulletSprite.lifespan = bulletLifespan;
 		}
-		this.playerSprite.animations.getAnimation("attack").onComplete.add( () =>
-		{this.playerSprite.play("idle");},this);
+		this.playerSprite.animations.getAnimation("attack").onComplete.add(() => { this.playerSprite.play("idle"); }, this);
 	}
 
 	CreatePlayerLife(maxLife: number) {
@@ -154,39 +154,39 @@ export default class Player {
 		//this.lifeGroup.scale.set(2, 2);
 
 		// Set the sprites in group scale
-		this.lifeGroup.setAll("scale.x",2);
-		this.lifeGroup.setAll("scale.y",2);
+		this.lifeGroup.setAll("scale.x", 2);
+		this.lifeGroup.setAll("scale.y", 2);
 		// Set the sprites fixed to camera 
-		this.lifeGroup.setAll("fixedToCamera",true);
+		this.lifeGroup.setAll("fixedToCamera", true);
 	}
 
 	PlayerHurt() {
-		if(this.playerLife>0 && !this.isHurt){
+		if (this.playerLife > 0 && !this.isHurted) {
 			let currentLifeSprite: Phaser.Sprite;
 			currentLifeSprite = this.lifeGroup.getAt(this.playerLife - 1) as Sprite;
 			currentLifeSprite.frameName = "life_empty";
 			this.playerLife--;
 			this.hurtAudio.play();
 			this.nextHurtReady = this.game.time.now + 1500;
-			this.isHurt = true;
+			this.isHurted = true;
 		}
-		if(this.playerLife<=0){
-			this.playerSpeed = {x:0,y:0};
+		if (this.playerLife <= 0) {
+			this.playerSpeed = { x: 0, y: 0 };
+			this.playerSprite.body.enable = false;
 			this.HideMouse(false);
 			this.deathAudio.play();
 			this.playerSprite.play("death");
-			this.playerSprite.animations.getAnimation("death").onComplete.add( () =>
-			{this.game.state.start('GameOverScene',true, false);},this);
+			this.playerSprite.animations.getAnimation("death").onComplete.add(() => { this.game.state.start('GameOverScene', true, false); }, this);
 		}
 	}
 
-	PlayerHurtUpdate(){
+	PlayerHurtUpdate() {
 		//this.game.add.tween(this.playerSprite).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-		if(this.isHurt && this.playerLife > 0){
+		if (this.isHurted && this.playerLife > 0) {
 			this.playerSprite.play("damaged");
-			if(this.game.time.now >= this.nextHurtReady){
+			if (this.game.time.now >= this.nextHurtReady) {
 				this.playerSprite.play("idle");
-				this.isHurt = false;
+				this.isHurted = false;
 			}
 		}
 	}
@@ -202,11 +202,11 @@ export default class Player {
 		this.playerSprite.play("idle");
 	}
 
-	HideMouse(isOn: boolean){
-		const onMouseDown = () =>{
+	HideMouse(isOn: boolean) {
+		const onMouseDown = () => {
 			this.game.input.mouse.requestPointerLock();
 		};
-		if(isOn)this.game.canvas.addEventListener('mousedown', onMouseDown);
-		else if(!isOn)this.game.canvas.removeEventListener("mousedown", onMouseDown);
+		if (isOn) this.game.canvas.addEventListener('mousedown', onMouseDown);
+		else if (!isOn) this.game.canvas.removeEventListener("mousedown", onMouseDown);
 	}
 }
