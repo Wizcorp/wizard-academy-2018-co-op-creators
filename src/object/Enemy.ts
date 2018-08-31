@@ -25,6 +25,7 @@ export default class Enemy {
     }
 
     update() {
+        this.BossBehaviorUpdate();
     }
 
     LoadEnemyAudio() {
@@ -117,7 +118,7 @@ export default class Enemy {
     }
 
     GhostBehavior(enemySprite: Sprite, _x: number, _y: number) {
-        enemySprite = this.game.add.sprite(_x,_y,"boss");
+        enemySprite = this.ghostGroup.getFirstDead();
         enemySprite.health = 1+2;
         enemySprite.animations.add("idle", ["ghost_idle01", "ghost_idle02"], 5, true);
         enemySprite.animations.add("idle_ghost", ["ghost_idle01_transparent", "ghost_idle02_transparent"], 5, true);
@@ -128,7 +129,7 @@ export default class Enemy {
     }
 
     BossBehavior(enemySprite: Sprite, _x: number, _y: number) {
-        enemySprite = this.ghostGroup.getFirstDead();
+        enemySprite = this.game.add.sprite(_x,_y,"boss");
         enemySprite.reset(_x, _y);
         enemySprite.health = 1+60;
         enemySprite.animations.add("idle", ["boss_idle01"], 5, true);
@@ -137,5 +138,13 @@ export default class Enemy {
         enemySprite.animations.add("eyebullet", ["boss_eyebullet01"], 5, false);
         enemySprite.animations.add("death", ["death01", "death02", "death03", "death04"], 5, false);
         enemySprite.play("idle");
+        this.BossBehaviorUpdate(enemySprite)
+    }
+
+    BossBehaviorUpdate(enemySprite?:Sprite){
+        const bossSprite = enemySprite;
+        if(bossSprite != null){
+            //if(this.player.playerSprite.x > bossSprite.x + )
+        }
     }
 }

@@ -2,7 +2,7 @@ import TimesteppedScene from "./base/TimesteppedScene";
 import PhaserTextStyle = Phaser.PhaserTextStyle;
 import { Events , Sound } from "phaser-ce";
 
-export default class TitleScene extends TimesteppedScene {
+export default class GameOverScene extends TimesteppedScene {
 
 	private gameOverBGM: Sound;
 
@@ -12,7 +12,7 @@ export default class TitleScene extends TimesteppedScene {
 	preload() {
 		this.game.load.spritesheet('restartButton', 'assets/restartbutton.png', 270, 130);
 		this.game.load.image('gameOverScreen', 'assets/gameover.png');
-		this.game.load.audio("gameOverBGM", "assets/audio/GameOver.ogg");
+		this.game.load.audio("gameOverBGM", "assets/audio/GameOver_2.ogg");
 	}
 
 	/**
