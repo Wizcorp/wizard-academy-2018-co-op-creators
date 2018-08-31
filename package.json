@@ -16,8 +16,8 @@
     "webpack-dev-server": "^3.1.4"
   },
   "scripts": {
-    "build": "webpack",
-    "server": "webpack-dev-server"
+    "build": "webpack --config webpack.config.prod.js",
+    "server": "webpack-dev-server --host 0.0.0.0"
   },
   "author": "",
   "license": "ISC",
