@@ -9,7 +9,8 @@ export default class Player {
 
 	public playerSprite: Phaser.Sprite;
 	public bulletGroup: Phaser.Group;
-	public bulletSprite: Phaser.Sprite;
+	// TODO Florian -- Do not keep reference to a bullet; you have many of them. Declare it where needed.
+	// public bulletSprite: Phaser.Sprite;
 	public lifeGroup: Phaser.Group;
 	public lifeSprite: Phaser.Sprite;
 
@@ -20,19 +21,18 @@ export default class Player {
 	private nextFire: number = 0;
 	private playerSpeed: Vector2 = { x: 40, y: 40 };
 	private nextHurtReady: number;
-	private vectorMath: VectorMath;
 	private game: Game;
 
 	// Import game scene data into Player.ts
 	constructor(game: Game) {
 		this.game = game;
-		this.vectorMath = new VectorMath();
 	}
 
 	create() {
 		this.AddPlayer();
 		this.LoadPlayerAnimNAudio();
 		this.CreatePlayerLife(3);
+		// TODO Florian -- これは「玉を作る」と読んでいますので、CreateBulletGroupの方が正しいと思います。
 		this.CreateBullet();
 		// Create a click listener to request to hide the mouse pointer if clicked
 		//this.HideMouse(true);
@@ -82,20 +82,21 @@ export default class Player {
 			let mouse: Vector2 = {
 				x: this.game.input.mouse.input.activePointer.movementX,
 				y: this.game.input.mouse.input.activePointer.movementY
-			}
+			};
 
 			let mouseDirection: Vector2 = {
 				x: Phaser.Math.clamp(mouse.x, -1, 1),
 				y: Phaser.Math.clamp(mouse.y, -1, 1)
 			};
 
+			// TODO Florian -- fixed your use of VectorMath
 			if (mouse.x > this.mouseTemp.x) mouseDirection.x++;
 			else if (mouse.x < this.mouseTemp.x) mouseDirection.x--;
-			else if (mouse.x == this.mouseTemp.x) this.vectorMath.ResetVelocityWithinTime(mouseDirection, .1, 0);
+			else if (mouse.x == this.mouseTemp.x) VectorMath.ResetVelocityWithinTime(mouseDirection, .1, 0);
 
 			if (mouse.y > this.mouseTemp.y) mouseDirection.y++;
 			else if (mouse.y < this.mouseTemp.y) mouseDirection.y--;
-			else if (mouse.y == this.mouseTemp.y) this.vectorMath.ResetVelocityWithinTime(mouseDirection, 0, .1);
+			else if (mouse.y == this.mouseTemp.y) VectorMath.ResetVelocityWithinTime(mouseDirection, 0, .1);
 
 			this.playerVelocity.x += mouseDirection.x * this.playerSpeed.x;
 			this.playerVelocity.y += mouseDirection.y * this.playerSpeed.y;
@@ -109,7 +110,7 @@ export default class Player {
 
 		}
 		this.playerSprite.body.velocity = this.playerVelocity;
-		this.vectorMath.ResetVelocityWithinTime(this.playerVelocity, 10);
+		VectorMath.ResetVelocityWithinTime(this.playerVelocity, 10);
 	}
 
 	CreateBullet() {
@@ -135,10 +136,11 @@ export default class Player {
 			this.nextFire = this.game.time.now + firerate;
 			this.playerSprite.play("attack");
 			this.atkAudio.play();
-			this.bulletSprite = this.bulletGroup.getFirstDead();
-			this.bulletSprite.reset(this.playerSprite.x + bulletOffset.x, this.playerSprite.y + bulletOffset.y);
-			this.bulletSprite.body.velocity.x = bulletSpeed;
-			this.bulletSprite.lifespan = bulletLifespan;
+			// TODO Florian -- try to keep variables local when possible (not property)
+			const bulletSprite = this.bulletGroup.getFirstDead();
+			bulletSprite.reset(this.playerSprite.x + bulletOffset.x, this.playerSprite.y + bulletOffset.y);
+			bulletSprite.body.velocity.x = bulletSpeed;
+			bulletSprite.lifespan = bulletLifespan;
 		}
 		this.playerSprite.animations.getAnimation("attack").onComplete.add(() => { this.playerSprite.play("idle"); }, this);
 	}

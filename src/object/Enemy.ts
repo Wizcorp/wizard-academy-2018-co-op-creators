@@ -2,6 +2,7 @@ import { Sprite, TileSprite, Input, Game } from "phaser-ce"
 import { Vector2 } from "../math/VectorMath";
 import Player from "./Player";
 
+// TODO Florian -- should be called EnemyManager or something (you have only one of those objects, and no real object for each enemy)
 export default class Enemy {
     private game: Game;
     private player: Player;
@@ -10,6 +11,7 @@ export default class Enemy {
     public dragonGroup: Phaser.Group;
     public ghostGroup: Phaser.Group;
 
+    // TODO Florian -- you're not using this variable
     private enemySprite: Phaser.Sprite;
     private deathAudio: Phaser.Sound;
     private hurtAudio: Phaser.Sound;
@@ -77,7 +79,7 @@ export default class Enemy {
     AddEnemy(_enemy: string, _x: number, _y: number) {
         switch (_enemy) {
             case "demon":
-                this.DemonBehavior(this.enemySprite, _x, _y);
+                this.DemonBehavior(_x, _y);
                 break;
 
             case "dragon":
@@ -97,8 +99,11 @@ export default class Enemy {
         }
     }
 
-    DemonBehavior(enemySprite: Sprite, _x: number, _y: number) {
-        enemySprite = this.demonGroup.getFirstDead();
+    // TODO Florian -- I would call this CreateDemon, etc.
+    DemonBehavior(_x: number, _y: number) {
+        // TODO Florian -- you are not using the enemySprite, and assign something that you don't use…
+        // Please reread about passing parameters, by value and reference. Here's a better version
+        const enemySprite = this.demonGroup.getFirstDead();
         enemySprite.reset(_x, _y);
         enemySprite.body.velocity.x = -25;
         enemySprite.health = 1+1;

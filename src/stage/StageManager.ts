@@ -43,17 +43,23 @@ export default class StageManager {
 
         // Add eneny in the object spawn point
         for (const object of objectList) {
-            if (object.name === "demon") {
-                this.enemy.AddEnemy("demon", object.x, object.y);
-                console.log("added", object.name);
-            }
-            if (object.name === "dragon") {
-                this.enemy.AddEnemy("dragon", object.x, object.y);
-                console.log("added", object.name);
-            }
-            if (object.name === "ghost") {
-                this.enemy.AddEnemy("ghost", object.x, object.y);
-                console.log("added", object.name);
+            // if (object.name === "demon") {
+            //     this.enemy.AddEnemy("demon", object.x, object.y);
+            //     console.log("added", object.name);
+            // }
+            // if (object.name === "dragon") {
+            //     this.enemy.AddEnemy("dragon", object.x, object.y);
+            //     console.log("added", object.name);
+            // }
+            // if (object.name === "ghost") {
+            //     this.enemy.AddEnemy("ghost", object.x, object.y);
+            //     console.log("added", object.name);
+            // }
+
+            // TODO Florian -- this is the same ;)
+            if (object.name === "demon" || object.name === "dragon" || object.name === "ghost") {
+              this.enemy.AddEnemy(object.name, object.x, object.y);
+              console.log("added", object.name);
             }
         }
 
@@ -88,6 +94,7 @@ export default class StageManager {
     }
 
     PlayerCollision() {
+        // TODO Florian -- very good
         this.game.physics.arcade.overlap(this.player.bulletGroup, this.enemy.dragonGroup, this.HurtEnemy, null, this);
         this.game.physics.arcade.overlap(this.player.bulletGroup, this.enemy.demonGroup, this.HurtEnemy, null, this);
         this.game.physics.arcade.overlap(this.player.bulletGroup, this.enemy.ghostGroup, this.HurtEnemy, null, this);
