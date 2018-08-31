@@ -25,6 +25,7 @@ export default class Enemy {
     }
 
     update() {
+        this.BossBehaviorUpdate();
     }
 
     LoadEnemyAudio() {
@@ -88,8 +89,7 @@ export default class Enemy {
                 break;
 
             case "boss":
-                this.enemySprite = this.game.add.sprite(_x, _y, "boss");
-                this.enemySprite.health = 50;
+                this.BossBehavior(this.enemySprite, _x, _y);
                 break;
 
             default:
@@ -119,7 +119,6 @@ export default class Enemy {
 
     GhostBehavior(enemySprite: Sprite, _x: number, _y: number) {
         enemySprite = this.ghostGroup.getFirstDead();
-        enemySprite.reset(_x, _y);
         enemySprite.health = 1+2;
         enemySprite.animations.add("idle", ["ghost_idle01", "ghost_idle02"], 5, true);
         enemySprite.animations.add("idle_ghost", ["ghost_idle01_transparent", "ghost_idle02_transparent"], 5, true);
@@ -129,5 +128,23 @@ export default class Enemy {
         let ghostTween = this.game.add.tween(enemySprite).to({y: enemySprite.y+70}, 1000, Phaser.Easing.Sinusoidal.InOut,true,0,-1,true);
     }
 
+    BossBehavior(enemySprite: Sprite, _x: number, _y: number) {
+        enemySprite = this.game.add.sprite(_x,_y,"boss");
+        enemySprite.reset(_x, _y);
+        enemySprite.health = 1+60;
+        enemySprite.animations.add("idle", ["boss_idle01"], 5, true);
+        enemySprite.animations.add("laser_charge", ["boss_laser_charge01"], 5, true);
+        enemySprite.animations.add("laser_shoot", ["boss_laser_shoot01"], 5, false);
+        enemySprite.animations.add("eyebullet", ["boss_eyebullet01"], 5, false);
+        enemySprite.animations.add("death", ["death01", "death02", "death03", "death04"], 5, false);
+        enemySprite.play("idle");
+        this.BossBehaviorUpdate(enemySprite)
+    }
 
+    BossBehaviorUpdate(enemySprite?:Sprite){
+        const bossSprite = enemySprite;
+        if(bossSprite != null){
+            //if(this.player.playerSprite.x > bossSprite.x + )
+        }
+    }
 }

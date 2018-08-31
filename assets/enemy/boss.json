@@ -8,7 +8,23 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"death01":
+"boss_laser_charge01":
+{
+	"frame": {"x":1,"y":35,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"boss_laser_shoot01":
+{
+	"frame": {"x":1,"y":69,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"boss_eyebullet01":
 {
 	"frame": {"x":35,"y":1,"w":32,"h":32},
 	"rotated": false,
@@ -16,7 +32,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"death02":
+"death01":
 {
 	"frame": {"x":69,"y":1,"w":32,"h":32},
 	"rotated": false,
@@ -24,9 +40,17 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
+"death02":
+{
+	"frame": {"x":35,"y":35,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
 "death03":
 {
-	"frame": {"x":103,"y":1,"w":32,"h":32},
+	"frame": {"x":35,"y":69,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -34,7 +58,7 @@
 },
 "death04":
 {
-	"frame": {"x":137,"y":1,"w":32,"h":32},
+	"frame": {"x":69,"y":35,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -45,8 +69,8 @@
 	"version": "1.0",
 	"image": "boss.png",
 	"format": "RGBA8888",
-	"size": {"w":170,"h":34},
+	"size": {"w":102,"h":102},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:a9307c5394cf19b077a108abb828d028:3142b1103c79422528ac8593b8489830:46ed12eff2905e238af2d2a3f055c310$"
+	"smartupdate": "$TexturePacker:SmartUpdate:f4662493c0670c9badd9789110d5481c:4676cbd56af3db57976748b316471e8e:46ed12eff2905e238af2d2a3f055c310$"
 }
 }
