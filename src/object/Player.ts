@@ -150,9 +150,6 @@ export default class Player {
 		for (let i = 0; i < maxLife; i++) {
 			this.lifeSprite = this.lifeGroup.create((this.game.width / 25) + (i * (this.game.width / 15)), this.game.height / 25, "playerLife", "life_full");
 		}
-		// Set group scale
-		//this.lifeGroup.scale.set(2, 2);
-
 		// Set the sprites in group scale
 		this.lifeGroup.setAll("scale.x", 2);
 		this.lifeGroup.setAll("scale.y", 2);
@@ -161,27 +158,30 @@ export default class Player {
 	}
 
 	PlayerHurt() {
+		const invincibleTime: number = 1500;
+
 		if (this.playerLife > 0 && !this.isHurted) {
 			let currentLifeSprite: Phaser.Sprite;
 			currentLifeSprite = this.lifeGroup.getAt(this.playerLife - 1) as Sprite;
 			currentLifeSprite.frameName = "life_empty";
 			this.playerLife--;
 			this.hurtAudio.play();
-			this.nextHurtReady = this.game.time.now + 1500;
+			this.nextHurtReady = this.game.time.now + invincibleTime;
 			this.isHurted = true;
 		}
 		if (this.playerLife <= 0) {
 			this.playerSpeed = { x: 0, y: 0 };
 			this.playerSprite.body.enable = false;
-			this.HideMouse(false);
+			//this.HideMouse(false);
 			this.deathAudio.play();
 			this.playerSprite.play("death");
-			this.playerSprite.animations.getAnimation("death").onComplete.add(() => { this.game.state.start('GameOverScene', true, false); }, this);
+			this.playerSprite.animations.getAnimation("death").onComplete.add(() => {
+				this.game.state.start('GameOverScene', true, false);
+			}, this);
 		}
 	}
 
 	PlayerHurtUpdate() {
-		//this.game.add.tween(this.playerSprite).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 		if (this.isHurted && this.playerLife > 0) {
 			this.playerSprite.play("damaged");
 			if (this.game.time.now >= this.nextHurtReady) {

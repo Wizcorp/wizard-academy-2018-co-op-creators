@@ -1,8 +1,10 @@
 import TimesteppedScene from "./base/TimesteppedScene";
 import PhaserTextStyle = Phaser.PhaserTextStyle;
-import { Events } from "phaser-ce";
+import { Events , Sound } from "phaser-ce";
 
 export default class TitleScene extends TimesteppedScene {
+
+	private gameOverBGM: Sound;
 
 	/**
 	 * Load sprites and various assets here.
@@ -10,24 +12,20 @@ export default class TitleScene extends TimesteppedScene {
 	preload() {
 		this.game.load.spritesheet('restartButton', 'assets/restartbutton.png', 270, 130);
 		this.game.load.image('gameOverScreen', 'assets/gameover.png');
+		this.game.load.audio("gameOverBGM", "assets/audio/GameOver.ogg");
 	}
 
 	/**
 	 * Ran once at initialization.
 	 */
 	create() {
-		//const gameOverScreen = this.game.add.sprite(0,0,'gameOverScreen');
-
-		const title = this.game.add.text(this.game.width / 2, 200, 'Retry?');
-		title.anchor.set(0.5, 0.5);
-		title.align = 'center';
-		title.font = 'Arial';
-		title.fontSize = 45;
-		title.fill = '#ffffff';
-
+		this.game.sound.stopAll(); 
+		this.gameOverBGM = this.game.add.audio("gameOverBGM",.5,false);
 		const gameOverScreen = this.game.add.sprite(0, 0, 'gameOverScreen');
 		const button = this.game.add.button(this.game.width / 2, 270, 'restartButton', this.OnClick, this, 2, 1, 0);
+		
 		button.anchor.set(0.5, 0.5);
+		this.gameOverBGM.play();
 	}
 
 	/**
@@ -46,6 +44,7 @@ export default class TitleScene extends TimesteppedScene {
 	 * Callback for button.
 	 */
 	OnClick() {
+		this.gameOverBGM.stop();
 		this.game.state.start('GameScene', true, false);
 	}
 }

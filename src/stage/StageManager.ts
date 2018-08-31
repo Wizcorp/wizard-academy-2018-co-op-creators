@@ -6,12 +6,13 @@ export default class StageManager {
     private game: Game;
     private player: Player;
     private enemy: Enemy;
-    public background: Phaser.TileSprite;
-    private stageBGM: Sound;
     private collisionLayer: Phaser.TilemapLayer;
-
     private currentStage: number;
+    //private scoreText: Text;
 
+    public background: Phaser.TileSprite;
+    public stageBGM: Sound;
+    
     constructor(_game: Game, _player: Player, _enemy: Enemy, _currentStage: number) {
         this.game = _game;
         this.player = _player;
@@ -98,14 +99,14 @@ export default class StageManager {
 
     // Use for bullet collide with enemy
     HurtEnemy(bulletSprite: Sprite, enemySprite: Sprite) {
-        console.log("hitted!");
+        //console.log("hit!");
         bulletSprite.kill();
         this.enemy.EnemyHurt(enemySprite);
     }
 
     // Use for player collide with enemy
     TouchEnemy(playerSprite: Sprite, enemySprite: Sprite) {
-        if (!this.player.isHurted) this.enemy.EnemyHurt(enemySprite);
+        //if (!this.player.isHurted) this.enemy.EnemyHurt(enemySprite);
         this.player.PlayerHurt();
     }
 
