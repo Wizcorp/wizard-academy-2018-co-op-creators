@@ -97,7 +97,10 @@ export default class Enemy {
             enemySprite.body.enable = false;
             this.deathAudio.play();
             enemySprite.play("death");
-            enemySprite.animations.getAnimation("death").onComplete.add(() => { enemySprite.kill(); }, this);
+            enemySprite.animations.getAnimation("death").onComplete.add(() => {
+                enemySprite.kill();
+                if(enemySprite === this.bossSprite)this.game.state.start('GameClearScene',true, false);
+            }, this);
         }
     }
 
