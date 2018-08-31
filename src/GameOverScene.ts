@@ -19,7 +19,7 @@ export default class GameOverScene extends TimesteppedScene {
 	 * Ran once at initialization.
 	 */
 	create() {
-		this.game.sound.stopAll(); 
+		this.game.sound.stopAll();
 		this.gameOverBGM = this.game.add.audio("gameOverBGM",.5,false);
 		const gameOverScreen = this.game.add.sprite(0, 0, 'gameOverScreen');
 		const button = this.game.add.button(this.game.width / 2, 270, 'restartButton', this.OnClick, this, 2, 1, 0);

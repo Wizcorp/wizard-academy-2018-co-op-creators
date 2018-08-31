@@ -33,7 +33,7 @@ export default class GameScene extends TimesteppedScene {
 		this.game.load.audio("enemyDeath", "assets/audio/enemy_death.ogg");
 
 		// Load tilemap layer
-		this.game.load.tilemap("stage1", "assets/Tilemap/maptest8.json", null, Phaser.Tilemap.TILED_JSON);
+		this.game.load.tilemap("stage1", "assets/Tilemap/map9.json", null, Phaser.Tilemap.TILED_JSON);
 	}
 
 	create() {

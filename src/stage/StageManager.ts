@@ -26,7 +26,7 @@ export default class StageManager {
 
     update() {
         this.BackgroundScrolling(this.background, 5);
-        //this.CameraScrolling(1.1);
+        this.CameraScrolling(1.5);
         this.PlayerCollision();
     }
 

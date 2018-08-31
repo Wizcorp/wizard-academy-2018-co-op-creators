@@ -14,6 +14,7 @@ export default class Enemy {
     public bossSprite: Sprite;
     private bossTween: Phaser.Tween;
     private bossSkillTimer: Phaser.Timer;
+    private isBossRanOnce: boolean = false; 
 
     private enemySprite: Sprite;
     private deathAudio: Sound;
@@ -81,7 +82,7 @@ export default class Enemy {
         this.bossBulletGroup = this.game.add.group();
         this.bossBulletGroup.enableBody = true;
         this.bossBulletGroup.physicsBodyType = Phaser.Physics.ARCADE;
-        this.bossBulletGroup.createMultiple(20, "bossBullet");
+        this.bossBulletGroup.createMultiple(30, "bossBullet");
         this.bossBulletGroup.setAll("checkWorldBounds", true);
         this.bossBulletGroup.setAll("outOfBoundsKill", true);
         this.bossBulletGroup.setAll("scale.x", 1.1);
@@ -182,9 +183,18 @@ export default class Enemy {
             let playerDistance = this.bossSprite.x - this.player.playerSprite.x;
             if (playerDistance <= 960) {
                 this.bossTween.start();
+                this.StartBossMusic();
                 this.bossSkillTimer.start();
-                this.bossBGM.play();
             }
+        }
+    }
+
+    // This is not working for unknown reason
+    StartBossMusic(){
+        if(!this.isBossRanOnce){
+            this.bossBGM.play();
+            console.log("MUUUUUUUUUUUUUSIC!");
+            this.isBossRanOnce = true;
         }
     }
 
@@ -195,7 +205,7 @@ export default class Enemy {
             // not enough time for making laser beam
         }
         else if (skillPercentage < 60) {
-            this.SpawnBossBullet(this.enemySprite, this.bossSprite.x + 5, this.bossSprite.y - 5, 3);
+            this.SpawnBossBullet(this.enemySprite, this.bossSprite.x + 5, this.bossSprite.y, 3);
         }
     }
 
@@ -204,7 +214,8 @@ export default class Enemy {
             enemySprite = this.bossBulletGroup.getFirstDead();
             enemySprite.reset(_x, _y);
             enemySprite.body.velocity.x = -150;
-            const bossBulletTween = this.game.add.tween(enemySprite).to({ y: enemySprite.y + 140 }, 1000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+            enemySprite.lifespan = 3000;
+            const bossBulletTween = this.game.add.tween(enemySprite).to({ y: enemySprite.y + 70 }, 1000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
         }
     }
 }

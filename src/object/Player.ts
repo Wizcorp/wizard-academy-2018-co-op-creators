@@ -18,7 +18,7 @@ export default class Player {
 	private hurtAudio: Phaser.Sound;
 	private mouseTemp: Vector2 = { x: 0, y: 0 };
 	private nextFire: number = 0;
-	private playerSpeed: Vector2 = { x: 40, y: 40 };
+	private playerSpeed: Vector2 = { x: 30, y: 30 };
 	private nextHurtReady: number;
 	private vectorMath: VectorMath;
 	private game: Game;
@@ -59,8 +59,8 @@ export default class Player {
 
 	PlayerMovement() {
 		//const playerSpeed: Vector2 = { x: 40, y: 40 }; //speed of player acceleration
-		const maxPlayerSpeed: number = 200;
-		const minPlayerSpeed: number = -200;
+		const maxPlayerSpeed: number = 230;
+		const minPlayerSpeed: number = -230;
 
 		this.playerVelocity = this.playerSprite.body.velocity;
 
